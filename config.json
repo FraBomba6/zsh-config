@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "install_date": "2025-02-04",
+  "os": "auto-detect",
+  "package_manager": "auto-detect",
+  "features": {
+    "tmux": {
+      "installed": false,
+      "auto_on_ssh": false
+    },
+    "colorls": {
+      "installed": false,
+      "auto_installed": false
+    },
+    "conda": {
+      "installed": false,
+      "path": null
+    },
+    "plugins": {
+      "fzf": true,
+      "z": true,
+      "docker": true,
+      "gh": true,
+      "colored_man_pages": true,
+      "history_substring_search": true
+    }
+  }
+}
