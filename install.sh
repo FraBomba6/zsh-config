@@ -234,7 +234,7 @@ if [ "$CONDA_INSTALL" = true ]; then
     if [[ "$OS_NAME" == "macos" ]]; then
         MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname -m)-macosx.sh"
     elif [[ "$OS_NAME" == "linux" ]]; then
-        MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname -m)-linux.sh"
+        MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname -m)-Linux.sh"
     else
         log_warn "Unsupported OS for Miniforge installation. Skipping."
         CONDA_INSTALL=false
