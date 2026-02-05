@@ -232,9 +232,9 @@ log_success "Zsh configuration linked successfully"
 if [ "$CONDA_INSTALL" = true ]; then
     log_info "Setting up Conda/Miniforge..."
     if [[ "$OS_NAME" == "macos" ]]; then
-        MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname -m)-macosx.sh"
+        MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-$(uname -m).sh"
     elif [[ "$OS_NAME" == "linux" ]]; then
-        MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname -m)-Linux.sh"
+        MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-$(uname -m).sh"
     else
         log_warn "Unsupported OS for Miniforge installation. Skipping."
         CONDA_INSTALL=false
