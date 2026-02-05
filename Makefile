@@ -1,10 +1,10 @@
 .PHONY: install install-quiet update uninstall test lint help
 
 install:
-	@./install.sh
+	./install.sh
 
 install-quiet:
-	@./install.sh --quiet
+	./install.sh --quiet
 
 update:
 	@./update.sh
