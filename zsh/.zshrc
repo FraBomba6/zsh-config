@@ -37,7 +37,7 @@ source $ZSH/oh-my-zsh.sh
 ZSH_CONFIG_CUSTOM_DIR="${ZSH_CONFIG_DIR:-$HOME/zsh-config}/zsh/custom"
 
 # Load custom files in order
-for config_file in "$ZSH_CONFIG_CUSTOM_DIR"/{paths,aliases,functions,fzf,colorls,docker,conda}.zsh; do
+for config_file in "$ZSH_CONFIG_CUSTOM_DIR"/{paths,aliases,functions,fzf,colorls,docker,conda,sysutils}.zsh; do
   [[ -f "$config_file" ]] && source "$config_file"
 done
 
