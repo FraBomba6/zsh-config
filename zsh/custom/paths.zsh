@@ -1,5 +1,10 @@
 # Custom PATH additions
 
+# FZF (fuzzy finder) - use git version over package manager version
+if [ -d "$HOME/.fzf/bin" ]; then
+  export PATH="$HOME/.fzf/bin:$PATH"
+fi
+
 # Local bin directories
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"

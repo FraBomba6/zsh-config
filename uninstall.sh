@@ -151,19 +151,11 @@ if [ "$REMOVE_PACKAGES" = true ]; then
                     brew uninstall tmux
                     log_success "Removed tmux"
                 fi
-                if prompt_yes_no "Remove fzf?"; then
-                    brew uninstall fzf
-                    log_success "Removed fzf"
-                fi
                 ;;
             apt)
                 if prompt_yes_no "Remove tmux?"; then
                     sudo apt remove -y tmux
                     log_success "Removed tmux"
-                fi
-                if prompt_yes_no "Remove fzf?"; then
-                    sudo apt remove -y fzf
-                    log_success "Removed fzf"
                 fi
                 ;;
             dnf|yum)
@@ -171,19 +163,11 @@ if [ "$REMOVE_PACKAGES" = true ]; then
                     sudo dnf remove -y tmux 2>/dev/null || sudo yum remove -y tmux
                     log_success "Removed tmux"
                 fi
-                if prompt_yes_no "Remove fzf?"; then
-                    sudo dnf remove -y fzf 2>/dev/null || sudo yum remove -y fzf
-                    log_success "Removed fzf"
-                fi
                 ;;
             pacman)
                 if prompt_yes_no "Remove tmux?"; then
                     sudo pacman -Rns --noconfirm tmux
                     log_success "Removed tmux"
-                fi
-                if prompt_yes_no "Remove fzf?"; then
-                    sudo pacman -Rns --noconfirm fzf
-                    log_success "Removed fzf"
                 fi
                 ;;
         esac

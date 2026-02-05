@@ -89,7 +89,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo apt install -y build-essential fzf ripgrep bat
+                sudo apt install -y build-essential ripgrep bat
                 ;;
 
             dnf)
@@ -117,7 +117,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo dnf install -y gcc make fzf ripgrep
+                sudo dnf install -y gcc make ripgrep
                 ;;
 
             yum)
@@ -145,7 +145,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo yum install -y gcc make fzf ripgrep
+                sudo yum install -y gcc make ripgrep
                 ;;
 
             pacman)
@@ -173,7 +173,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo pacman -S --noconfirm base-devel fzf ripgrep bat
+                sudo pacman -S --noconfirm base-devel ripgrep bat
                 ;;
 
             *)
@@ -213,7 +213,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo apt install -y build-essential fzf ripgrep bat
+                sudo apt install -y build-essential ripgrep bat
                 ;;
 
             *)
