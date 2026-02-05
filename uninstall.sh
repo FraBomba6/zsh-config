@@ -6,12 +6,20 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 CYAN='\033[0;36m'
 
+QUIET=false
+
+for arg in "$@"; do
+    case $arg in
+        --quiet|-q) QUIET=true ;;
+    esac
+done
+
 log_info() {
-    echo -e "${CYAN}[INFO]${NC} $1"
+    [ "$QUIET" = false ] && echo -e "${CYAN}[INFO]${NC} $1"
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+    [ "$QUIET" = false ] && echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 log_error() {

@@ -5,6 +5,14 @@ ZSH_CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.zsh-config-backup-$(date +%Y%m%d_%H%M%S)"
 CONFIG_FILE="$ZSH_CONFIG_DIR/config.json"
 
+QUIET=false
+
+for arg in "$@"; do
+    case $arg in
+        --quiet|-q) QUIET=true ;;
+    esac
+done
+
 COLORS='\033[0;36m' # Cyan
 NC='\033[0m'       # No Color
 GREEN='\033[0;32m'
@@ -12,15 +20,15 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 
 log_info() {
-    echo -e "${COLORS}[INFO]${NC} $1"
+    [ "$QUIET" = false ] && echo -e "${COLORS}[INFO]${NC} $1"
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+    [ "$QUIET" = false ] && echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 log_warn() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+    [ "$QUIET" = false ] && echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 log_error() {

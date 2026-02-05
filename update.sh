@@ -6,16 +6,24 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 YELLOW='\033[1;33m'
 
+QUIET=false
+
+for arg in "$@"; do
+    case $arg in
+        --quiet|-q) QUIET=true ;;
+    esac
+done
+
 log_info() {
-    echo -e "\033[0;36m[INFO]\033[0m $1"
+    [ "$QUIET" = false ] && echo -e "${GREEN}[INFO]${NC} $1"
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+    [ "$QUIET" = false ] && echo -e "${GREEN}[SUCCESS]${NC} $1"
 }
 
 log_warn() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+    [ "$QUIET" = false ] && echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
 log_info "=== Portable Zsh Configuration Update ==="
