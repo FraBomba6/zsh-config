@@ -96,10 +96,6 @@ if [ "$RESTORE_BACKUP" = true ] && [ -n "$BACKUP_DIR" ]; then
             cp "$BACKUP_DIR/.tmux.conf" "$HOME/.tmux.conf"
             log_success "Restored .tmux.conf"
         fi
-        if [ -f "$BACKUP_DIR/.ssh_rc" ]; then
-            cp "$BACKUP_DIR/.ssh_rc" "$HOME/.ssh/rc"
-            log_success "Restored .ssh/rc"
-        fi
     fi
 fi
 
@@ -133,11 +129,6 @@ if [ "$REMOVE_CONFIGS" = true ]; then
     if prompt_yes_no "Remove Powerlevel10k?"; then
         rm -rf "$HOME/.oh-my-zsh/custom/themes/powerlevel10k"
         log_success "Removed Powerlevel10k"
-    fi
-
-    if prompt_yes_no "Remove SSH rc?"; then
-        rm -f "$HOME/.ssh/rc"
-        log_success "Removed .ssh/rc"
     fi
 fi
 
@@ -180,18 +171,17 @@ if prompt_yes_no "Remove all backups?"; then
     log_success "Removed all backups"
 fi
 
-cat << EOF
-${GREEN}
-╔════════════════════════════════════════════════════════════╗
-║                    Uninstall Complete!                             ║
-╚════════════════════════════════════════════════════════════╝${NC}
-
-${CYAN}Notes:${NC}
-- If you restored a backup, you may need to reconfigure your shell
-- To change your default shell back to bash: ${YELLOW}chsh -s $(which bash)${NC}
-- Backups were kept unless you chose to remove them
-
-${CYAN}Documentation:${NC}
-- Uninstall options: ${YELLOW}./uninstall.sh --help${NC}
-- Reinstall:        ${YELLOW}cd ~/zsh-config && ./install.sh${NC}
-EOF
+echo ""
+echo -e "${GREEN}╔══════════════════════════════════════════════════════════╗${NC}"
+echo -e "${GREEN}║                     Uninstall Complete!                     ║${NC}"
+echo -e "${GREEN}╚══════════════════════════════════════════════════════════╝${NC}"
+echo ""
+echo -e "${CYAN}Notes:${NC}"
+echo "- If you restored a backup, you may need to reconfigure your shell"
+echo -e "- To change your default shell back to bash: ${YELLOW}chsh -s \$(which bash)${NC}"
+echo "- Backups were kept unless you chose to remove them"
+echo ""
+echo -e "${CYAN}Documentation:${NC}"
+echo -e "- Uninstall options: ${YELLOW}./uninstall.sh --help${NC}"
+echo -e "- Reinstall:        ${YELLOW}cd ~/zsh-config && ./install.sh${NC}"
+echo ""

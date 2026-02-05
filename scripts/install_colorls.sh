@@ -58,7 +58,7 @@ fi
 
 log_info "Testing colorls installation..."
 # Use full path from gem to test, since PATH may not be updated in current shell
-COLORLS_BIN="$GEM_BIN/colorls"
+COLORLS_BIN="$HOME/.gem/ruby/${RUBY_VERSION}.0/bin/colorls"
 if [ -x "$COLORLS_BIN" ]; then
     VERSION=$("$COLORLS_BIN" --version 2>/dev/null || echo "unknown")
     log_success "colorls is working (version: $VERSION)"

@@ -108,7 +108,6 @@ if [ "$SKIP_BACKUP" = false ]; then
         [ -f "$HOME/.p10k.zsh" ] && cp "$HOME/.p10k.zsh" "$BACKUP_DIR/.p10k.zsh"
         [ -f "$HOME/.zshenv" ] && cp "$HOME/.zshenv" "$BACKUP_DIR/.zshenv"
         [ -f "$HOME/.tmux.conf" ] && cp "$HOME/.tmux.conf" "$BACKUP_DIR/.tmux.conf"
-        [ -f "$HOME/.ssh/rc" ] && cp "$HOME/.ssh/rc" "$BACKUP_DIR/.ssh_rc"
         log_success "Backup created at: $BACKUP_DIR"
     fi
 else
@@ -116,7 +115,6 @@ else
 fi
 
 TMUX_INSTALL=false
-TMUX_AUTO_SSH=false
 COLORLS_INSTALL=true
 
 echo ""
@@ -124,9 +122,6 @@ log_info "=== Configuration Options ==="
 
 if prompt_yes_no "Install tmux?"; then
     TMUX_INSTALL=true
-    if prompt_yes_no "  Auto-start tmux on SSH connections?"; then
-        TMUX_AUTO_SSH=true
-    fi
 fi
 
 if ! command -v colorls &>/dev/null; then
@@ -167,8 +162,7 @@ cat << EOF > "$CONFIG_FILE"
   "package_manager": "$PACKAGE_MANAGER",
   "features": {
     "tmux": {
-      "installed": $TMUX_INSTALL,
-      "auto_on_ssh": $TMUX_AUTO_SSH
+      "installed": $TMUX_INSTALL
     },
     "colorls": {
       "installed": $COLORLS_INSTALL,
@@ -209,22 +203,19 @@ if [ "$TMUX_INSTALL" = true ]; then
     source "$ZSH_CONFIG_DIR/scripts/install_tmux.sh"
 fi
 
-if [ "$TMUX_AUTO_SSH" = true ]; then
-    log_info "Setting up SSH tmux integration..."
-    source "$ZSH_CONFIG_DIR/scripts/setup_ssh.sh"
-fi
-
 log_info "Setting up Zsh configuration..."
 
 ln -sf "$ZSH_CONFIG_DIR/zsh/.zshrc" "$HOME/.zshrc"
 ln -sf "$ZSH_CONFIG_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
 
-if [ ! -f "$HOME/.zshenv" ] || [ "$SKIP_BACKUP" = true ]; then
-    ln -sf "$ZSH_CONFIG_DIR/zsh/.zshenv" "$HOME/.zshenv"
+# Link tmux configuration
+if [ "$TMUX_INSTALL" = true ]; then
+  ln -sf "$ZSH_CONFIG_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
+  log_info "Tmux autostart enabled via oh-my-zsh plugin"
 fi
 
-if [ "$TMUX_INSTALL" = true ]; then
-    ln -sf "$ZSH_CONFIG_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
+if [ ! -f "$HOME/.zshenv" ] || [ "$SKIP_BACKUP" = true ]; then
+    ln -sf "$ZSH_CONFIG_DIR/zsh/.zshenv" "$HOME/.zshenv"
 fi
 
 log_success "Zsh configuration linked successfully"
@@ -289,10 +280,7 @@ echo "  ✓ Oh My Zsh framework"
 echo "  ✓ Plugins: zsh-autosuggestions, zsh-syntax-highlighting, fzf, z"
 
 if [ "$TMUX_INSTALL" = true ]; then
-    echo "  ✓ Tmux terminal multiplexer"
-    if [ "$TMUX_AUTO_SSH" = true ]; then
-        echo "  ✓ SSH auto-tmux integration"
-    fi
+    echo "  ✓ Tmux terminal multiplexer (auto-start enabled)"
 fi
 
 if [ "$COLORLS_INSTALL" = true ]; then

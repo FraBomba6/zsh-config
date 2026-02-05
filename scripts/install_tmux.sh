@@ -55,3 +55,5 @@ if [ ! -f "$HOME/.tmux.conf" ]; then
     ln -sf "$ZSH_CONFIG_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
     log_success "tmux configuration linked"
 fi
+
+log_info "Tmux autostart is handled by oh-my-zsh plugin (configured in .zshrc)"

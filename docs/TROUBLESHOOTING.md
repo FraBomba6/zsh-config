@@ -396,61 +396,96 @@ This guide helps you resolve common issues with the Zsh configuration.
 5. Use fallback:
    The config automatically falls back to `ls --color=auto`
 
-### tmux Not Auto-Starting on SSH
+### colorls Not in PATH
 
 **Symptoms:**
-- SSH doesn't automatically start tmux
-- No tmux session on remote login
+- `colorls: command not found`
+- `gem which colorls` shows it's installed
+- `ls` uses system output instead of colorls
 
 **Solutions:**
 
-1. Check SSH rc file:
+1. Check where colorls is installed:
    ```bash
-   ls -la ~/.ssh/rc
+   gem which colorls
+   gem env | grep -E "(USER INSTALLATION|EXECUTABLE DIRECTORY)"
    ```
 
-2. Verify rc is executable:
+2. If installed to user gems, verify PATH includes user gem bin:
    ```bash
-   chmod +x ~/.ssh/rc
+   echo $PATH | grep ruby
+   # Should show ~/.gem/ruby/X.Y.0/bin
    ```
 
-3. Check rc contents:
+3. Manually verify paths.zsh configuration:
    ```bash
-   cat ~/.ssh/rc
+   cat ~/zsh-config/zsh/custom/paths.zsh | grep -A 10 "Ruby gems"
+   # Should check USER INSTALLATION DIRECTORY first
    ```
 
-4. Test locally:
+4. Reload shell after fixes:
    ```bash
-   bash ~/.ssh/rc
+   source ~/.zshrc
+   which colorls  # Should now find it
    ```
 
-5. Check SSH configuration:
-   ```bash
-   cat ~/.ssh/config
-   # Ensure PermitLocalCommand is not blocking
-   ```
+5. Fallback to system ls if issues persist:
+   The config automatically falls back to `ls --color=auto`
 
-### tmux Nested Sessions
+### tmux Auto-Start Issues
 
 **Symptoms:**
-- tmux inside tmux
-- Confusing navigation
+- tmux doesn't auto-start when opening terminal
+- Nested tmux sessions
+
+**How tmux Autostart Works:**
+
+The oh-my-zsh `tmux` plugin handles autostart automatically using these variables in `.zshrc`:
+
+```zsh
+export ZSH_TMUX_AUTOSTART=true           # Enable autostart
+export ZSH_TMUX_AUTOSTART_ONCE=true      # Only autostart once per login session
+export ZSH_TMUX_AUTOCONNECT=true         # Attach to existing session if available
+export ZSH_TMUX_AUTOQUIT=true            # Close terminal when tmux exits
+export ZSH_TMUX_DEFAULT_SESSION_NAME="main"  # Default session name
+```
 
 **Solutions:**
 
-The SSH rc script should check for existing tmux:
+1. **Disable autostart:**
+   ```zsh
+   # In ~/.zshrc, change:
+   export ZSH_TMUX_AUTOSTART=false
+   ```
 
-```bash
-# ~/.ssh/rc should contain this check:
-if [ -z "$TMUX" ] && [ -z "$SSH_TTY" ]; then
-    tmux attach-session -t main || tmux new-session -s main
-fi
-```
+2. **Nested session prevention:**
+   The plugin automatically checks `$TMUX` environment variable and won't start tmux if already inside a session.
 
-Attach from inside tmux instead:
-```bash
-tmux attach-session -t main
-```
+3. **Verify plugin is loaded:**
+   ```bash
+   grep -E "plugins=.*tmux" ~/.zshrc
+   ```
+
+4. **Check for editor exclusions:**
+   The plugin won't autostart inside Emacs, Vim, IntelliJ, or Zed editors.
+
+5. **Manual session management:**
+   ```bash
+   tmux ls                    # List sessions
+   tmux attach -t main        # Attach to main session
+   tmux new -s mysession      # Create new session
+   ```
+
+**Available Configuration Variables:**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ZSH_TMUX_AUTOSTART` | `false` | Auto-start tmux on shell launch |
+| `ZSH_TMUX_AUTOSTART_ONCE` | `true` | Only autostart once per session |
+| `ZSH_TMUX_AUTOCONNECT` | `true` | Attach to existing session |
+| `ZSH_TMUX_AUTOQUIT` | `$ZSH_TMUX_AUTOSTART` | Close terminal when tmux exits |
+| `ZSH_TMUX_DEFAULT_SESSION_NAME` | (none) | Default session name |
+| `ZSH_TMUX_FIXTERM` | `true` | Fix $TERM for 256 colors |
 
 ### Docker Aliases Not Working
 

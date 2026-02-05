@@ -89,7 +89,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo apt install -y build-essential ripgrep bat
+                sudo apt install -y build-essential ripgrep bat fd-find btop ncdu
                 ;;
 
             dnf)
@@ -117,7 +117,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo dnf install -y gcc make ripgrep
+                sudo dnf install -y gcc make ripgrep bat btop ncdu fd
                 ;;
 
             yum)
@@ -145,7 +145,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo yum install -y gcc make ripgrep
+                sudo yum install -y gcc make ripgrep btop ncdu fd
                 ;;
 
             pacman)
@@ -173,7 +173,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo pacman -S --noconfirm base-devel ripgrep bat
+                sudo pacman -S --noconfirm base-devel ripgrep bat btop ncdu fd
                 ;;
 
             *)
@@ -213,7 +213,7 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
-                sudo apt install -y build-essential ripgrep bat
+                sudo apt install -y build-essential ripgrep bat fd-find btop ncdu
                 ;;
 
             *)

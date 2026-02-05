@@ -58,11 +58,7 @@ The installer prompts you to configure optional features:
 #### Install tmux?
 - Installs tmux terminal multiplexer
 - Configures sensible defaults
-
-#### Auto-start tmux on SSH?
-- Creates `~/.ssh/rc` script
-- Automatically attaches/creates tmux session on SSH
-- Prevents nested sessions
+- Auto-starts via oh-my-zsh plugin (configurable)
 
 #### Install colorls?
 - Checks for Ruby/gem
@@ -293,7 +289,6 @@ The installation uses these paths:
 ~/.p10k.zsh                 # Powerlevel10k config (symlink)
 ~/.zshenv                  # Environment variables (symlink)
 ~/.tmux.conf                # Tmux configuration (symlink)
-~/.ssh/rc                   # SSH integration script
 ~/zsh-config/               # This repository (for updates)
 ```
 

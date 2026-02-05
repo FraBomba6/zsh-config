@@ -11,7 +11,7 @@ A fully portable, cross-platform Zsh configuration with Oh My Zsh, Powerlevel10k
 - 🔧 **Idempotent**: Safe to run multiple times
 - 💾 **Backups**: Automatic backups before overwriting
 - 🔄 **Easy updates**: Simple update mechanism
-- 🖥️ **Optional tmux**: Install and auto-start on SSH connections
+- 🖥️ **Optional tmux**: Terminal multiplexer with auto-start support
 - 🎨 **colorls**: Enhanced `ls` and `la` aliases with fallback
 
 ## Quick Start
@@ -57,7 +57,6 @@ Follow the interactive prompts to customize your setup.
 - `.p10k.zsh`: Powerlevel10k theme config
 - `.zshenv`: Environment variables
 - `.tmux.conf`: Tmux configuration
-- `~/.ssh/rc`: Auto-start tmux on SSH (if enabled)
 
 ## Installation Details
 
@@ -157,9 +156,10 @@ phd              # cd ~/Desktop/phd (customize as needed)
 - Valid commands shown in green
 
 **tmux Integration**
-- Auto-attaches to existing session on SSH (if enabled)
-- Creates new session if none exists
-- Prevents nested tmux sessions
+- Auto-starts tmux session when opening terminal (if enabled)
+- Attaches to existing session or creates new one
+- Prevents nested tmux sessions automatically
+- Closes terminal when tmux exits (configurable)
 
 ## Customization
 
@@ -261,12 +261,12 @@ Run the configuration wizard:
 p10k configure
 ```
 
-### SSH auto-tmux not working
+### tmux not auto-starting
 
-Check that `~/.ssh/rc` exists and is executable:
+Check tmux plugin configuration in `~/.zshrc`:
 ```bash
-ls -la ~/.ssh/rc
-chmod +x ~/.ssh/rc
+grep ZSH_TMUX ~/.zshrc
+# Should show ZSH_TMUX_AUTOSTART=true
 ```
 
 ### Slow shell startup
@@ -291,8 +291,7 @@ Your installation settings are stored in `~/zsh-config/config.json`:
   "os": "macos",
   "features": {
     "tmux": {
-      "installed": true,
-      "auto_on_ssh": true
+      "installed": true
     },
     "colorls": {
       "installed": true

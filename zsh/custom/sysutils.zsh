@@ -1,12 +1,5 @@
 # System Utilities Aliases
 
-# System monitoring - prefer btop > htop > top
-if command -v btop &>/dev/null; then
-    alias btop='btop'
-elif command -v htop &>/dev/null; then
-    alias btop='htop'
-fi
-
 # Disk usage - prefer ncdu > dust > du
 if command -v ncdu &>/dev/null; then
     alias duf='ncdu'

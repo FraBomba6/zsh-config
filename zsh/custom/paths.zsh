@@ -12,9 +12,16 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # Ruby gems (for colorls and other ruby tools)
 if command -v gem &>/dev/null; then
-  GEM_BIN_PATH="$(gem env | grep 'EXECUTABLE DIRECTORY' | cut -d ':' -f 2 | tr -d ' ')"
-  if [ -n "$GEM_BIN_PATH" ]; then
-    export PATH="$GEM_BIN_PATH:$PATH"
+  # Try user gem directory first (for --user-install gems)
+  USER_GEM_BIN="$(gem env | grep 'USER INSTALLATION DIRECTORY' | cut -d ':' -f 2 | tr -d ' ')/bin"
+  if [ -d "$USER_GEM_BIN" ]; then
+    export PATH="$USER_GEM_BIN:$PATH"
+  else
+    # Fallback to system gem directory
+    GEM_BIN_PATH="$(gem env | grep 'EXECUTABLE DIRECTORY' | cut -d ':' -f 2 | tr -d ' ')"
+    if [ -n "$GEM_BIN_PATH" ]; then
+      export PATH="$GEM_BIN_PATH:$PATH"
+    fi
   fi
 fi
 

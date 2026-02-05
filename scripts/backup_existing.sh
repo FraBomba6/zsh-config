@@ -24,7 +24,6 @@ FILES_TO_BACKUP=(
     "$HOME/.p10k.zsh"
     "$HOME/.zshenv"
     "$HOME/.tmux.conf"
-    "$HOME/.ssh/rc"
 )
 
 BACKUP_COUNT=0

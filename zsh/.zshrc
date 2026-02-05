@@ -27,6 +27,13 @@ plugins=(
   zsh-syntax-highlighting
 )
 
+# Tmux plugin configuration (oh-my-zsh plugin handles autostart)
+export ZSH_TMUX_AUTOSTART=true
+export ZSH_TMUX_AUTOSTART_ONCE=true
+export ZSH_TMUX_AUTOCONNECT=true
+export ZSH_TMUX_AUTOQUIT=true
+export ZSH_TMUX_DEFAULT_SESSION_NAME="main"
+
 # Start Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
@@ -85,12 +92,5 @@ unsetopt BEEP
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 [[ -f "$ZSH_CONFIG_CUSTOM_DIR/local.zsh" ]] && source "$ZSH_CONFIG_CUSTOM_DIR/local.zsh"
 
-# Auto-start tmux on SSH connections (improved logic)
-if [[ -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]] && [ -x "$(command -v tmux)" ]; then
-  # Check if "main" session exists before attempting attach
-  if tmux has-session -t main 2>/dev/null; then
-    tmux attach-session -t main
-  else
-    tmux new-session -A -s main
-  fi
-fi
+# opencode
+export PATH=/home/francesco/.opencode/bin:$PATH
