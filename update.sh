@@ -21,7 +21,6 @@ log_warn() {
 log_info "=== Portable Zsh Configuration Update ==="
 
 source "$ZSH_CONFIG_DIR/scripts/detect_os.sh"
-source "$ZSH_CONFIG_DIR/config.json"
 
 log_info "Updating Oh My Zsh..."
 if [ -d "$HOME/.oh-my-zsh" ]; then
