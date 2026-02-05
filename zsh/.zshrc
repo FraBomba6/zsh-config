@@ -9,6 +9,10 @@ export ZSH="$HOME/.oh-my-zsh"
 # Theme
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
+# Autosuggestions configuration
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+
 # Plugins
 plugins=(
   git
@@ -19,6 +23,8 @@ plugins=(
   gh
   colored-man-pages
   history-substring-search
+  zsh-autosuggestions
+  zsh-syntax-highlighting
 )
 
 # Start Oh My Zsh
@@ -28,10 +34,10 @@ source $ZSH/oh-my-zsh.sh
 [[ -f ~/.zshenv ]] && source ~/.zshenv
 
 # Source custom configurations
-ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$ZSH/custom}"
+ZSH_CONFIG_CUSTOM_DIR="${ZSH_CONFIG_DIR:-$HOME/zsh-config}/zsh/custom"
 
 # Load custom files in order
-for config_file in "$ZSH_CUSTOM_DIR"/{paths,aliases,functions,fzf,colorls,docker}.zsh; do
+for config_file in "$ZSH_CONFIG_CUSTOM_DIR"/{paths,aliases,functions,fzf,colorls,docker,conda}.zsh; do
   [[ -f "$config_file" ]] && source "$config_file"
 done
 
@@ -41,7 +47,6 @@ done
 # fzf key bindings and completions
 if command -v fzf &>/dev/null; then
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-  [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 fi
 
 # z (directory jumper) key bindings

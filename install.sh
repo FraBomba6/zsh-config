@@ -140,10 +140,14 @@ else
 fi
 
 CONDA_INSTALL=false
-if ! command -v conda &>/dev/null; then
+if ! command -v conda &>/dev/null && [ ! -d "$HOME/miniforge3" ]; then
     if prompt_yes_no "Install Miniforge (Conda) for Python environment management?"; then
         CONDA_INSTALL=true
     fi
+elif [ -d "$HOME/miniforge3" ]; then
+    log_success "Miniforge is already installed at ~/miniforge3"
+    log_info "Conda integration will be configured in .zshrc"
+    CONDA_INTEGRATED=true
 fi
 
 UPDATE_CONFIG=true
@@ -163,7 +167,8 @@ cat << EOF > "$CONFIG_FILE"
       "auto_installed": false
     },
     "conda": {
-      "installed": $CONDA_INSTALL,
+      "installed": ${CONDA_INSTALL:-false},
+      "integrated": ${CONDA_INTEGRATED:-false},
       "path": null
     },
     "plugins": {
@@ -240,6 +245,9 @@ if [ "$CONDA_INSTALL" = true ]; then
             log_warn "Miniforge already installed at $INSTALL_DIR"
         fi
     fi
+elif [ "$CONDA_INTEGRATED" = true ]; then
+    log_info "Integrating existing Miniforge installation..."
+    log_success "Conda integration configured"
 fi
 
 if [ "$SKIP_SHELL" = false ]; then
@@ -261,14 +269,12 @@ else
     log_info "Skipping shell change as requested"
 fi
 
-cat << EOF
-${GREEN}
-╔══════════════════════════════════════════════════════════════╗
-║                    Installation Complete!                             ║
-╚══════════════════════════════════════════════════════════════╝${NC}
-
-What was installed:
-EOF
+echo ""
+echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${GREEN}║                    Installation Complete!                    ║${NC}"
+echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${NC}"
+echo ""
+echo "What was installed:"
 
 echo "  ✓ Zsh configuration with Powerlevel10k theme"
 echo "  ✓ Oh My Zsh framework"
@@ -291,30 +297,25 @@ if [ "$CONDA_INSTALL" = true ]; then
     echo "  ✓ Miniforge (Conda) for Python environments"
 fi
 
-cat << EOF
+echo ""
+echo -e "${COLORS}Next Steps:${NC}"
+echo -e "1. Reload your shell: ${YELLOW}source ~/.zshrc${NC}"
+echo "2. Or start a new terminal session"
+echo -e "3. Run ${YELLOW}p10k configure${NC} to customize the theme"
+echo ""
+echo -e "${COLORS}Useful Commands:${NC}"
+echo -e "- Update configs: ${YELLOW}cd ~/zsh-config && ./update.sh${NC}"
+echo -e "- Uninstall:      ${YELLOW}cd ~/zsh-config && ./uninstall.sh${NC}"
+echo -e "- Customize:      ${YELLOW}vim ~/zsh-config/zsh/custom/aliases.zsh${NC}"
+echo ""
+echo -e "${COLORS}Documentation:${NC}"
+echo -e "- README:         ${YELLOW}~/zsh-config/README.md${NC}"
+echo -e "- Customize:      ${YELLOW}~/zsh-config/docs/CUSTOMIZATION.md${NC}"
+echo -e "- Troubleshoot:   ${YELLOW}~/zsh-config/docs/TROUBLESHOOTING.md${NC}"
+echo ""
+echo -e "${GREEN}Enjoy your new Zsh setup!${NC}"
 
-${COLORS}Next Steps:${NC}
-1. Reload your shell: ${YELLOW}source ~/.zshrc${NC}
-2. Or start a new terminal session
-3. Run ${YELLOW}p10k configure${NC} to customize the theme
-
-${COLORS}Useful Commands:${NC}
-- Update configs: ${YELLOW}cd ~/zsh-config && ./update.sh${NC}
-- Uninstall:    ${YELLOW}cd ~/zsh-config && ./uninstall.sh${NC}
-- Customize:    ${YELLOW}vim ~/zsh-config/zsh/custom/aliases.zsh${NC}
-
-${COLORS}Documentation:${NC}
-- README:        ${YELLOW}~/zsh-config/README.md${NC}
-- Customize:     ${YELLOW}~/zsh-config/docs/CUSTOMIZATION.md${NC}
-- Troubleshoot:  ${YELLOW}~/zsh-config/docs/TROUBLESHOOTING.md${NC}
-
-${GREEN}Enjoy your new Zsh setup!${NC}
-EOF
-
-if prompt_yes_no "Start tmux now?"; then
-    if [ "$TMUX_INSTALL" = true ]; then
-        tmux new-session -A -s main
-    else
-        log_warn "Tmux was not installed. Cannot start."
-    fi
+# Automatically reload shell to apply changes
+if prompt_yes_no "Reload shell now to apply changes?"; then
+    exec zsh -l
 fi

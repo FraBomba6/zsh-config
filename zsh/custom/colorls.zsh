@@ -1,45 +1,48 @@
 # Colorls Integration with Fallback
 
 if command -v colorls &>/dev/null; then
-  # colorls is installed
   COLORLS_PATH=$(dirname $(gem which colorls))
   TAB_COMPLETE="$COLORLS_PATH/tab_complete.sh"
 
-  # Source tab completion if available
   if [ -f "$TAB_COMPLETE" ]; then
     source "$TAB_COMPLETE" 2>/dev/null || true
   fi
 
-  # Enhanced aliases
   alias ls='colorls'
-  alias la='colorls -la'
-  alias ll='colorls -alF'
-  alias lt='colorls --tree=level 2'
-  alias ld='colorls -ld'
+  alias la='colorls -A'
+  alias ll='colorls -l --sd'
+  alias lla='colorls -lA --sd'
+  alias lt='colorls --tree=2'
+  alias lf='colorls -f'
+  alias ldir='colorls -d'
+  alias lgs='colorls --gs'
+  alias llgs='colorls -lA --sd --gs'
+  alias ltr='colorls -lt --r'
+  alias lS='colorls -S'
+  alias lx='colorls -X'
 
-  # colorls options
   export COLORLS_ICONS='auto'
   export COLORLS_MODE='dark'
 else
-  # colorls not installed - use system ls with colors
-  alias ls='ls --color=auto'
-  alias la='ls -la --color=auto'
-  alias ll='ls -alF --color=auto'
-  alias lt='tree -L 2 2>/dev/null || ls -R'
-
-  # Warn user once per session
-  if [[ -z "$COLORLS_WARNED" ]]; then
-    echo "Note: colorls not found. Using system ls with colors."
-    echo "Install colorls with: gem install colorls"
-    export COLORLS_WARNED=1
-  fi
-fi
-
-# If tree is installed, use it for lt
-if command -v tree &>/dev/null; then
-  if command -v colorls &>/dev/null; then
-    alias lt='colorls --tree=level 2'
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ls='ls -G'
   else
+    alias ls='ls --color=auto'
+  fi
+
+  alias la='ls -A'
+  alias ll='ls -lh'
+  alias lla='ls -lAh'
+  alias lf='ls -F | grep -v /$'
+  alias ldir='ls -d */'
+  alias ltr='ls -lht'
+  alias lS='ls -lS'
+  alias lx='ls -lX'
+  alias lgs='ls --color=never'
+
+  if command -v tree &>/dev/null; then
     alias lt='tree -L 2'
+  else
+    alias lt='ls -R'
   fi
 fi

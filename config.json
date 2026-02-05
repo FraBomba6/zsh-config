@@ -1,19 +1,20 @@
 {
   "version": "1.0.0",
-  "install_date": "2025-02-04",
-  "os": "auto-detect",
-  "package_manager": "auto-detect",
+  "install_date": "2026-02-05",
+  "os": "macos",
+  "package_manager": "brew",
   "features": {
     "tmux": {
       "installed": false,
       "auto_on_ssh": false
     },
     "colorls": {
-      "installed": false,
+      "installed": true,
       "auto_installed": false
     },
     "conda": {
       "installed": false,
+      "integrated": true,
       "path": null
     },
     "plugins": {

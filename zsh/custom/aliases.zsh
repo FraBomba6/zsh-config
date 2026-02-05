@@ -1,18 +1,5 @@
 # Custom Aliases
 
-# ls aliases (colorls or fallback)
-if command -v colorls &>/dev/null; then
-  alias ls='colorls'
-  alias la='colorls -la'
-  alias ll='colorls -alF'
-  alias lt='colorls --tree=level 2'
-else
-  alias ls='ls --color=auto'
-  alias la='ls -la --color=auto'
-  alias ll='ls -alF --color=auto'
-  alias lt='tree -L 2'
-fi
-
 # Directory navigation
 alias ..='cd ..'
 alias ...='cd ../..'

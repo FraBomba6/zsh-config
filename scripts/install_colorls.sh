@@ -28,6 +28,12 @@ if ! command -v gem &>/dev/null; then
     return 1
 fi
 
+# Add gem bin to PATH for this script (in case it's not already there)
+GEM_BIN="$(gem env | grep 'EXECUTABLE DIRECTORY' | cut -d ':' -f 2 | tr -d ' ')"
+if [ -n "$GEM_BIN" ] && [[ ":$PATH:" != *":$GEM_BIN:"* ]]; then
+    export PATH="$GEM_BIN:$PATH"
+fi
+
 if command -v colorls &>/dev/null; then
     log_warn "colorls is already installed: $(gem which colorls)"
     log_info "Updating colorls..."
@@ -49,10 +55,12 @@ else
 fi
 
 log_info "Testing colorls installation..."
-if command -v colorls &>/dev/null; then
-    VERSION=$(colorls --version 2>/dev/null || echo "unknown")
+# Use full path from gem to test, since PATH may not be updated in current shell
+COLORLS_BIN="$GEM_BIN/colorls"
+if [ -x "$COLORLS_BIN" ]; then
+    VERSION=$("$COLORLS_BIN" --version 2>/dev/null || echo "unknown")
     log_success "colorls is working (version: $VERSION)"
 else
-    log_warn "colorls command not found in PATH"
-    log_warn "You may need to add Ruby gems to your PATH"
+    log_warn "colorls binary not found at expected location"
+    log_warn "It will be available after reloading your shell"
 fi

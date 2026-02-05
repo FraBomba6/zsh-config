@@ -85,8 +85,19 @@ The installer will:
 
 ```bash
 # Directory navigation
-la              # Long, detailed listing (colorls or ls -la)
-ll              # List in long format
+ls              # Basic listing (colorls or system ls)
+la              # List all files (except . and ..)
+ll              # Long listing, directories first
+lla             # Long listing with hidden files, directories first
+lt              # Tree view (2 levels)
+lf              # Files only
+ldir            # Directories only
+lgs             # With git status
+llgs            # Long listing with git status
+ltr             # Sorted by time, oldest first
+lS              # Sorted by size
+lx              # Sorted by extension
+
 ..              # Go up one directory
 ...             # Go up two directories
 
