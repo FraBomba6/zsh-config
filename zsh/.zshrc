@@ -85,7 +85,12 @@ unsetopt BEEP
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 [[ -f "$ZSH_CONFIG_CUSTOM_DIR/local.zsh" ]] && source "$ZSH_CONFIG_CUSTOM_DIR/local.zsh"
 
-# Auto-start tmux on SSH connections
-if [[ -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]] && command -v tmux &>/dev/null; then
-  tmux attach-session -t main 2>/dev/null || tmux new-session -s main
+# Auto-start tmux on SSH connections (improved logic)
+if [[ -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]] && [ -x "$(command -v tmux)" ]; then
+  # Check if "main" session exists before attempting attach
+  if tmux has-session -t main 2>/dev/null; then
+    tmux attach-session -t main
+  else
+    tmux new-session -A -s main
+  fi
 fi
