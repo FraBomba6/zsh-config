@@ -2,11 +2,9 @@
 *.swp
 *.swo
 *~
-.*.swp
 
 # OS files
 .DS_Store
-.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
@@ -43,3 +41,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Local overrides (not tracked in git)
+zsh/custom/local.zsh
+~/.zshrc.local

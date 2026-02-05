@@ -9,7 +9,9 @@ alias cd..='cd ..'
 
 # User shortcuts
 alias home='cd ~'
-alias phd="cd ~/Desktop/phd"
+
+# Note: For machine-specific aliases, create ~/.zshrc.local or
+# zsh/custom/local.zsh (gitignored) instead of adding them here
 
 # Safety
 alias rm='rm -i'

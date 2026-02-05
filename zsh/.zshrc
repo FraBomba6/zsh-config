@@ -85,3 +85,7 @@ setopt PUSHD_IGNORE_DUPS
 
 # cd beep
 unsetopt BEEP
+
+# Load local overrides (not tracked in git)
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+[[ -f "$ZSH_CONFIG_CUSTOM_DIR/local.zsh" ]] && source "$ZSH_CONFIG_CUSTOM_DIR/local.zsh"
