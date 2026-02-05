@@ -28,11 +28,13 @@ if ! command -v gem &>/dev/null; then
     return 1
 fi
 
-# Add gem bin to PATH for this script (in case it's not already there)
-GEM_BIN="$(gem env | grep 'EXECUTABLE DIRECTORY' | cut -d ':' -f 2 | tr -d ' ')"
-if [ -n "$GEM_BIN" ] && [[ ":$PATH:" != *":$GEM_BIN:"* ]]; then
-    export PATH="$GEM_BIN:$PATH"
-fi
+# Always use --user-install for servers without root permissions
+# Set up user gem environment
+export GEM_HOME="$HOME/.gem"
+
+# Get Ruby version for bin path (works on both macOS and Linux)
+RUBY_VERSION=$(ruby -e 'puts RUBY_VERSION.split(".")[0..1].join(".")' 2>/dev/null || echo "3.0")
+export PATH="$HOME/.gem/ruby/${RUBY_VERSION}.0/bin:$PATH"
 
 if command -v colorls &>/dev/null; then
     log_warn "colorls is already installed: $(gem which colorls)"
