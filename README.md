@@ -98,6 +98,23 @@ ltr             # Sorted by time, oldest first
 lS              # Sorted by size
 lx              # Sorted by extension
 
+# System monitoring
+btop            # Modern resource monitor (if installed)
+htop            # Fallback system monitor
+
+# Modern utilities
+bat             # Enhanced cat with syntax highlighting (if installed)
+rg              # Fast grep alternative (if installed)
+fd              # Fast find alternative (if installed)
+tldr            # Simplified man pages (hint if missing)
+ncdu            # Fast disk usage analyzer (if installed)
+
+# Quick system info
+sysinfo         # Show CPU, memory, disk info
+psmem           # Top memory consumers
+pscpu           # Top CPU consumers
+ports           # Show listening ports
+
 ..              # Go up one directory
 ...             # Go up two directories
 
