@@ -23,7 +23,7 @@ cat << 'EOF' > "$RC_FILE"
 # Auto-start tmux on SSH connections
 # This script checks if already inside tmux before starting a new session
 
-if [ -z "$TMUX" ] && [ -z "$SSH_TTY" ]; then
+if [ -z "$TMUX" ] && [ -n "$SSH_TTY" ]; then
     # Check if tmux is installed
     if command -v tmux &>/dev/null; then
         # Try to attach to existing session or create new one

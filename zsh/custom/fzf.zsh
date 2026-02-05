@@ -25,9 +25,21 @@ fi
 # Use Alt+C to search directories
 # The widget is loaded by fzf
 
-# FZF completion
-if [ -f ~/.fzf.zsh ]; then
-  source ~/.fzf.zsh
+# FZF key bindings and completions
+if command -v fzf &>/dev/null; then
+  _fzf_version=$(fzf --version 2>/dev/null | awk '{print $1}')
+  _fzf_major=$(echo "$_fzf_version" | cut -d. -f1)
+  _fzf_minor=$(echo "$_fzf_version" | cut -d. -f2)
+  
+  if [ "$_fzf_major" -gt 0 ] 2>/dev/null || ([ "$_fzf_major" -eq 0 ] 2>/dev/null && [ "$_fzf_minor" -ge 48 ] 2>/dev/null); then
+    # fzf 0.48+ supports --zsh flag
+    source <(fzf --zsh 2>/dev/null)
+  elif [ -f ~/.fzf.zsh ]; then
+    # Older versions use the legacy fzf.zsh file
+    source ~/.fzf.zsh 2>/dev/null
+  fi
+  
+  unset _fzf_version _fzf_major _fzf_minor
 fi
 
 # Custom FZF functions

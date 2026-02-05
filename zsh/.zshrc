@@ -44,11 +44,6 @@ done
 # Load Powerlevel10k configuration
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# fzf key bindings and completions
-if command -v fzf &>/dev/null; then
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-fi
-
 # z (directory jumper) key bindings
 if command -v _z &>/dev/null; then
   autoload -Uz _z && eval "$(z --init zsh)"
