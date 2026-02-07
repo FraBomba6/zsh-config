@@ -1,44 +1,60 @@
 # Colorls Integration with Fallback
+#
+# This file is sourced AFTER paths.zsh, so all gem bin directories
+# should already be on PATH by the time we get here.
 
 if command -v colorls &>/dev/null; then
-  COLORLS_PATH=$(dirname $(gem which colorls))
-  TAB_COMPLETE="$COLORLS_PATH/tab_complete.sh"
+  # ── colorls found on PATH ──────────────────────────────────────────
+  # Try to find tab_complete.sh via `gem which`; fall back to searching
+  # gem directories directly (handles Ruby version upgrades gracefully).
+  _colorls_tab_complete=""
 
-  if [ -f "$TAB_COMPLETE" ]; then
-    source "$TAB_COMPLETE" 2>/dev/null || true
+  if command -v gem &>/dev/null; then
+    _colorls_lib="$(gem which colorls 2>/dev/null)"
+    if [ -n "$_colorls_lib" ]; then
+      _colorls_tab_complete="$(dirname "$_colorls_lib")/tab_complete.sh"
+    fi
   fi
 
-  alias ls='colorls'
-  alias la='colorls -A'
-  alias ll='colorls -l --sd'
-  alias lla='colorls -lA --sd'
-  alias lt='colorls --tree=2'
-  alias lf='colorls -f'
-  alias ldir='colorls -d'
-  alias lgs='colorls --gs'
-  alias llgs='colorls -lA --sd --gs'
-  alias ltr='colorls -lt --r'
-  alias lS='colorls -S'
-  alias lx='colorls -X'
+  # Fallback: search across all gem directories
+  if [ ! -f "$_colorls_tab_complete" ]; then
+    for _candidate in \
+      ${HOMEBREW_PREFIX:-/opt/homebrew}/lib/ruby/gems/*/gems/colorls-*/lib/tab_complete.sh(N) \
+      $HOME/.gem/ruby/*/gems/colorls-*/lib/tab_complete.sh(N); do
+      if [ -f "$_candidate" ]; then
+        _colorls_tab_complete="$_candidate"
+        break
+      fi
+    done
+  fi
 
-  export COLORLS_ICONS='auto'
-  export COLORLS_MODE='dark'
+  # Source tab completion if found
+  if [ -f "$_colorls_tab_complete" ]; then
+    source "$_colorls_tab_complete" 2>/dev/null
+  fi
+
+  unset _colorls_lib _colorls_tab_complete _candidate
+
+  # Aliases
+  alias ls='colorls'
+  alias la='colorls -la'
+  alias ll='colorls -alF'
+  alias lt='colorls --tree=2'
+  alias ld='colorls -ld'
+  alias lgs='colorls --gs'
+
 else
+  # ── colorls NOT found -- use system ls with colors ─────────────────
   if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS BSD ls uses -G for color
     alias ls='ls -G'
   else
     alias ls='ls --color=auto'
   fi
 
-  alias la='ls -A'
-  alias ll='ls -lh'
-  alias lla='ls -lAh'
-  alias lf='ls -F | grep -v /$'
-  alias ldir='ls -d */'
-  alias ltr='ls -lht'
-  alias lS='ls -lS'
-  alias lx='ls -lX'
-  alias lgs='ls --color=never'
+  alias la='ls -la'
+  alias ll='ls -alF'
+  alias ld='ls -ld'
 
   if command -v tree &>/dev/null; then
     alias lt='tree -L 2'

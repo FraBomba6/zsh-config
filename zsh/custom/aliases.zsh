@@ -35,16 +35,7 @@ alias glog='git log --oneline --decorate --graph'
 alias gclean='git clean -fd'
 alias greset='git reset --hard HEAD~1'
 
-# Docker aliases
-alias d='docker'
-alias dc='docker compose'
-alias dstop='docker stop $(docker ps -aq)'
-alias drmi='docker rmi -f $(docker images -aq)'
-alias dps='docker ps'
-alias dpsa='docker ps -a'
-alias di='docker images'
-alias dex='docker exec -it'
-alias dlog='docker logs -f --tail 100'
+# Note: Docker aliases are in docker.zsh
 
 # Other useful aliases
 alias h='history'

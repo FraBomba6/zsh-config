@@ -5,16 +5,35 @@ alias d='docker'
 alias dps='docker ps'
 alias dpsa='docker ps -a'
 alias di='docker images'
-alias dri='docker rmi'
 alias dpa='docker ps -aq'
 
 # Container management
 alias dex='docker exec -it'
 alias dlog='docker logs -f --tail 100'
 alias dstop='docker stop'
+# Stop all running containers
+dstopall() {
+  local running
+  running=$(docker ps -aq 2>/dev/null)
+  if [[ -n "$running" ]]; then
+    docker stop $running
+  else
+    echo 'No running containers'
+  fi
+}
 alias dstart='docker start'
 alias drestart='docker restart'
-alias drmi='docker rmi -f $(docker images -f dangling=true -q)' 2>/dev/null || echo 'No dangling images'
+
+# Remove dangling images (function, not alias, so subshell runs at call time)
+drmi() {
+  local dangling
+  dangling=$(docker images -f dangling=true -q 2>/dev/null)
+  if [[ -n "$dangling" ]]; then
+    docker rmi -f $dangling
+  else
+    echo 'No dangling images'
+  fi
+}
 
 # Volume management
 alias dvls='docker volume ls'

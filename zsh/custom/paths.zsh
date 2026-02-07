@@ -1,51 +1,79 @@
 # Custom PATH additions
+# This file is sourced early by .zshrc to ensure all binaries are available.
+# Order matters: Homebrew/system paths first, then tools, then user paths.
 
-# FZF (fuzzy finder) - use git version over package manager version
+# ---------------------------------------------------------------------------
+# 1. Homebrew (macOS) -- must come first so brew-managed ruby, gem, etc. work
+# ---------------------------------------------------------------------------
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [ -d /opt/homebrew ]; then
+    export HOMEBREW_PREFIX="/opt/homebrew"
+  elif [ -d /usr/local/Homebrew ]; then
+    export HOMEBREW_PREFIX="/usr/local"
+  fi
+
+  if [ -n "$HOMEBREW_PREFIX" ]; then
+    export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
+
+    # Homebrew-managed Ruby (ensures `gem`, `ruby` resolve to Homebrew versions)
+    if [ -d "$HOMEBREW_PREFIX/opt/ruby/bin" ]; then
+      export PATH="$HOMEBREW_PREFIX/opt/ruby/bin:$PATH"
+    fi
+
+    # Compiler flags for Homebrew libraries
+    export CPPFLAGS="-I${HOMEBREW_PREFIX}/include${CPPFLAGS+ ${CPPFLAGS}}"
+    export LDFLAGS="-L${HOMEBREW_PREFIX}/lib -Wl,-rpath,${HOMEBREW_PREFIX}/lib${LDFLAGS+ ${LDFLAGS}}"
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 2. Ruby gems -- add ALL gem bin directories so gems survive Ruby upgrades
+# ---------------------------------------------------------------------------
+if [[ "$OSTYPE" == "darwin"* ]] && [ -n "$HOMEBREW_PREFIX" ]; then
+  # Homebrew-managed gems: add every version's bin directory
+  for gemdir in "$HOMEBREW_PREFIX"/lib/ruby/gems/*/bin(N); do
+    export PATH="$gemdir:$PATH"
+  done
+fi
+
+# User-local gems (Linux servers, --user-install, etc.)
+for gemdir in "$HOME"/.gem/ruby/*/bin(N); do
+  export PATH="$gemdir:$PATH"
+done
+
+# ---------------------------------------------------------------------------
+# 3. FZF (fuzzy finder) -- prefer git-installed version over system package
+# ---------------------------------------------------------------------------
 if [ -d "$HOME/.fzf/bin" ]; then
   export PATH="$HOME/.fzf/bin:$PATH"
 fi
 
-# Local bin directories
-export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
+# ---------------------------------------------------------------------------
+# 4. Local bin directories
+# ---------------------------------------------------------------------------
+[ -d "$HOME/bin" ]        && export PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
-# Ruby gems (for colorls and other ruby tools)
-if command -v gem &>/dev/null; then
-  # Try user gem directory first (for --user-install gems)
-  USER_GEM_BIN="$(gem env | grep 'USER INSTALLATION DIRECTORY' | cut -d ':' -f 2 | tr -d ' ')/bin"
-  if [ -d "$USER_GEM_BIN" ]; then
-    export PATH="$USER_GEM_BIN:$PATH"
-  else
-    # Fallback to system gem directory
-    GEM_BIN_PATH="$(gem env | grep 'EXECUTABLE DIRECTORY' | cut -d ':' -f 2 | tr -d ' ')"
-    if [ -n "$GEM_BIN_PATH" ]; then
-      export PATH="$GEM_BIN_PATH:$PATH"
-    fi
-  fi
-fi
+# ---------------------------------------------------------------------------
+# 5. Language-specific tools (only if installed)
+# ---------------------------------------------------------------------------
 
-# Homebrew (macOS)
-if [[ "$OSTYPE" == "darwin"* ]] && [ -d /opt/homebrew/bin ]; then
-  export PATH="/opt/homebrew/bin:$PATH"
-  export PATH="/opt/homebrew/sbin:$PATH"
-  export HOMEBREW_PREFIX="/opt/homebrew"
-elif [[ "$OSTYPE" == "darwin"* ]] && [ -d /usr/local/bin ]; then
-  export PATH="/usr/local/bin:$PATH"
-  export PATH="/usr/local/sbin:$PATH"
-  export HOMEBREW_PREFIX="/usr/local"
-fi
-
-# Flutter (if installed)
-if [ -d "$HOME/flutter" ]; then
-  export PATH="$HOME/flutter/bin:$PATH"
-fi
-
-# Rust (if installed)
+# Rust / Cargo
 if [ -d "$HOME/.cargo/bin" ]; then
-  source "$HOME/.cargo/env" 2>/dev/null || true
+  export PATH="$HOME/.cargo/bin:$PATH"
+  [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env" 2>/dev/null
 fi
 
-# User-specific paths (customize these)
-# export PATH="/path/to/your/tool:$PATH"
-# export PATH="$HOME/Tools:$PATH"
+# Flutter
+[ -d "$HOME/flutter/bin" ] && export PATH="$HOME/flutter/bin:$PATH"
+
+# Go
+[ -d "$HOME/go/bin" ]      && export PATH="$HOME/go/bin:$PATH"
+[ -d "/usr/local/go/bin" ] && export PATH="/usr/local/go/bin:$PATH"
+
+# ---------------------------------------------------------------------------
+# 6. Machine-specific paths
+# ---------------------------------------------------------------------------
+# Add machine-specific paths in ~/.zshrc.local or zsh/custom/local.zsh
+# Example:
+#   export PATH="/opt/my-tool/bin:$PATH"

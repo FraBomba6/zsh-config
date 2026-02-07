@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-ZSH_CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ZSH_CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 GREEN='\033[0;32m'
 NC='\033[0m'
 YELLOW='\033[1;33m'
