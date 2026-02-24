@@ -153,6 +153,68 @@ elif [ -d "$HOME/miniforge3" ]; then
     CONDA_INTEGRATED=true
 fi
 
+INSTALL_BAT=false
+INSTALL_FD=false
+INSTALL_RIPGREP=false
+INSTALL_BTOP=false
+INSTALL_EZA=false
+INSTALL_TLDR=false
+
+echo ""
+log_info "=== Modern CLI Tools ==="
+log_info "These are modern replacements for classic Unix commands."
+echo ""
+
+if prompt_yes_no "Install modern CLI tools?"; then
+    if ! command -v bat &>/dev/null && ! command -v batcat &>/dev/null; then
+        if prompt_yes_no "  Install bat (modern cat replacement with syntax highlighting)?"; then
+            INSTALL_BAT=true
+        fi
+    else
+        log_success "  bat is already installed"
+    fi
+
+    if ! command -v fd &>/dev/null && ! command -v fdfind &>/dev/null; then
+        if prompt_yes_no "  Install fd (modern find replacement)?"; then
+            INSTALL_FD=true
+        fi
+    else
+        log_success "  fd is already installed"
+    fi
+
+    if ! command -v rg &>/dev/null; then
+        if prompt_yes_no "  Install ripgrep (modern grep replacement)?"; then
+            INSTALL_RIPGREP=true
+        fi
+    else
+        log_success "  ripgrep is already installed"
+    fi
+
+    if ! command -v btop &>/dev/null; then
+        if prompt_yes_no "  Install btop (modern system monitor)?"; then
+            INSTALL_BTOP=true
+        fi
+    else
+        log_success "  btop is already installed"
+    fi
+
+    if ! command -v eza &>/dev/null; then
+        if prompt_yes_no "  Install eza (modern ls replacement)?"; then
+            INSTALL_EZA=true
+        fi
+    else
+        log_success "  eza is already installed"
+    fi
+
+    if ! command -v tldr &>/dev/null; then
+        if prompt_yes_no "  Install tldr (simplified man pages)?"; then
+            INSTALL_TLDR=true
+        fi
+    else
+        log_success "  tldr is already installed"
+    fi
+fi
+
 UPDATE_CONFIG=true
 cat << EOF > "$CONFIG_FILE"
 {
@@ -172,6 +234,14 @@ cat << EOF > "$CONFIG_FILE"
       "installed": ${CONDA_INSTALL:-false},
       "integrated": ${CONDA_INTEGRATED:-false},
       "path": null
+    },
+    "modern_tools": {
+      "bat": $INSTALL_BAT,
+      "fd": $INSTALL_FD,
+      "ripgrep": $INSTALL_RIPGREP,
+      "btop": $INSTALL_BTOP,
+      "eza": $INSTALL_EZA,
+      "tldr": $INSTALL_TLDR
     },
     "plugins": {
       "fzf": true,
@@ -196,6 +266,13 @@ source "$ZSH_CONFIG_DIR/scripts/install_plugins.sh"
 if [ "$COLORLS_INSTALL" = true ] && ! command -v colorls &>/dev/null; then
     log_info "Installing colorls..."
     source "$ZSH_CONFIG_DIR/scripts/install_colorls.sh"
+fi
+
+if [ "$INSTALL_BAT" = true ] || [ "$INSTALL_FD" = true ] || [ "$INSTALL_RIPGREP" = true ] || \
+   [ "$INSTALL_BTOP" = true ] || [ "$INSTALL_EZA" = true ] || [ "$INSTALL_TLDR" = true ]; then
+    log_info "Installing modern CLI tools..."
+    export INSTALL_BAT INSTALL_FD INSTALL_RIPGREP INSTALL_BTOP INSTALL_EZA INSTALL_TLDR
+    source "$ZSH_CONFIG_DIR/scripts/install_modern_tools.sh"
 fi
 
 if [ "$TMUX_INSTALL" = true ]; then
@@ -291,6 +368,18 @@ fi
 
 if [ "$CONDA_INSTALL" = true ]; then
     echo "  ✓ Miniforge (Conda) for Python environments"
+fi
+
+MODERN_TOOLS_INSTALLED=""
+[ "$INSTALL_BAT" = true ] && MODERN_TOOLS_INSTALLED="$MODERN_TOOLS_INSTALLED bat"
+[ "$INSTALL_FD" = true ] && MODERN_TOOLS_INSTALLED="$MODERN_TOOLS_INSTALLED fd"
+[ "$INSTALL_RIPGREP" = true ] && MODERN_TOOLS_INSTALLED="$MODERN_TOOLS_INSTALLED ripgrep"
+[ "$INSTALL_BTOP" = true ] && MODERN_TOOLS_INSTALLED="$MODERN_TOOLS_INSTALLED btop"
+[ "$INSTALL_EZA" = true ] && MODERN_TOOLS_INSTALLED="$MODERN_TOOLS_INSTALLED eza"
+[ "$INSTALL_TLDR" = true ] && MODERN_TOOLS_INSTALLED="$MODERN_TOOLS_INSTALLED tldr"
+
+if [ -n "$MODERN_TOOLS_INSTALLED" ]; then
+    echo "  ✓ Modern CLI tools:$MODERN_TOOLS_INSTALLED"
 fi
 
 echo ""

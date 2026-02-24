@@ -1,51 +1,50 @@
 # System Utilities Aliases
 
-# Disk usage - prefer ncdu > dust > du
-if command -v ncdu &>/dev/null; then
-    alias duf='ncdu'
-elif command -v dust &>/dev/null; then
-    alias duf='dust'
-fi
+# Modern CLI tools - only set aliases if the tool is installed
 
-# Cat alternatives - prefer bat > cat
+# bat - modern cat replacement (with syntax highlighting)
 if command -v bat &>/dev/null; then
     alias cat='bat'
     alias catp='bat --paging=never'
     alias catn='bat --paging=never'
 elif command -v batcat &>/dev/null; then
-    # Debian/Ubuntu installs bat as batcat
     alias cat='batcat'
     alias catp='batcat --paging=never'
+    alias catn='batcat --paging=never'
     alias bat='batcat'
 fi
 
-# Find alternatives - prefer fd > find
+# fd - modern find replacement
 if command -v fd &>/dev/null; then
     alias find='fd'
     alias ffind='fd'
 elif command -v fdfind &>/dev/null; then
-    # Debian/Ubuntu installs fd as fdfind
     alias fd='fdfind'
+    alias find='fdfind'
     alias ffind='fdfind'
 fi
 
-# Grep alternatives - prefer rg > grep
+# ripgrep (rg) - modern grep replacement
 if command -v rg &>/dev/null; then
     alias grep='rg'
     alias rgrep='rg'
 fi
 
-# ls alternatives - eza (modern exa fork)
+# eza - modern ls replacement (exa fork)
 if command -v eza &>/dev/null; then
-    alias eza='eza'
+    alias ls='eza'
+    alias la='eza -la'
+    alias ll='eza -l'
+    alias lt='eza --tree'
+    alias l='eza -lah'
 fi
 
 # Modern utilities aliases
-alias ping='ping -c 5'                    # Limit ping count
-alias ports='ss -tulanp'                  # Show listening ports
-alias mem='free -h'                       # Memory usage
-alias cpu='lscpu'                         # CPU info
-alias temp='sensors 2>/dev/null || echo "sensors not installed"'  # Temperature
+alias ping='ping -c 5'
+alias ports='ss -tulanp'
+alias mem='free -h'
+alias cpu='lscpu'
+alias temp='sensors 2>/dev/null || echo "sensors not installed"'
 
 # Quick system info
 sysinfo() {
@@ -67,10 +66,5 @@ sysinfo() {
 }
 
 # Process management
-alias psmem='ps aux --sort=-%mem | head -20'   # Top memory consumers
-alias pscpu='ps aux --sort=-%cpu | head -20'   # Top CPU consumers
-
-# Install tldr hint if missing
-if ! command -v tldr &>/dev/null; then
-    alias tldr='echo "Install tldr: npm install -g tldr-client && tldr-client completions install" 1>&2'
-fi
+alias psmem='ps aux --sort=-%mem | head -20'
+alias pscpu='ps aux --sort=-%cpu | head -20'
