@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 GREEN='\033[0;32m'
 NC='\033[0m'
@@ -25,7 +24,7 @@ log_error() {
 if [ -z "$OS_NAME" ] || [ -z "$PACKAGE_MANAGER" ]; then
     echo "Error: OS_NAME and PACKAGE_MANAGER must be set"
     echo "Run: source scripts/detect_os.sh"
-    exit 1
+    return 1 2>/dev/null || exit 1
 fi
 
 install_via_package_manager() {
@@ -227,7 +226,6 @@ FAILED_TOOLS=""
 if [ -n "$FAILED_TOOLS" ]; then
     log_warn "Failed to install:$FAILED_TOOLS"
     log_warn "You may need to install these manually"
-    exit 0
 fi
 
-log_success "All requested modern tools installed successfully"
+log_success "Modern tools installation complete"
