@@ -189,19 +189,36 @@ install_eza() {
     return 1
 }
 
-install_node() {
-    if command -v node &>/dev/null; then
+install_tldr() {
+    log_info "Installing tldr..."
+
+    if command -v tldr &>/dev/null; then
+        log_success "tldr is already installed"
         return 0
     fi
-    log_info "Node.js not found. Installing Node.js and npm..."
+
     case "$PACKAGE_MANAGER" in
-        brew)   brew install node && return 0 ;;
-        apt)    sudo apt update && sudo apt install -y nodejs npm && return 0 ;;
-        dnf)    sudo dnf install -y nodejs npm && return 0 ;;
-        yum)    sudo yum install -y nodejs npm && return 0 ;;
-        pacman) sudo pacman -S --noconfirm nodejs npm && return 0 ;;
+        brew)
+            brew install tldr && log_success "tldr installed via brew" && return 0
+            ;;
+        pacman)
+            sudo pacman -S --noconfirm tldr && log_success "tldr installed via pacman" && return 0
+            ;;
     esac
-    log_warn "Could not install Node.js automatically. Install it manually and re-run."
+
+    # Preferred: pipx (installs to ~/.local/bin, no sudo needed)
+    if command -v pipx &>/dev/null; then
+        pipx install tldr && log_success "tldr installed via pipx" && return 0
+    fi
+
+    # Fallback: pip --user (also installs to ~/.local/bin, no sudo needed)
+    if command -v pip3 &>/dev/null; then
+        pip3 install --user tldr && log_success "tldr installed via pip3" && return 0
+    elif command -v pip &>/dev/null; then
+        pip install --user tldr && log_success "tldr installed via pip" && return 0
+    fi
+
+    log_warn "Could not install tldr. Install manually: pipx install tldr"
     return 1
 }
 
