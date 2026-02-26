@@ -57,6 +57,12 @@ case "$OS_NAME" in
             log_success "ruby installed"
         fi
 
+        if ! command -v node &>/dev/null; then
+            log_info "Installing Node.js and npm via Homebrew..."
+            brew install node
+            log_success "Node.js and npm installed"
+        fi
+
         brew install coreutils gnu-sed
         ;;
 
@@ -89,6 +95,12 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
+                if ! command -v node &>/dev/null; then
+                    log_info "Installing Node.js and npm..."
+                    sudo apt install -y nodejs npm
+                    log_success "Node.js and npm installed"
+                fi
+
                 sudo apt install -y build-essential
                 ;;
 
@@ -115,6 +127,12 @@ case "$OS_NAME" in
                     log_info "Installing ruby..."
                     sudo dnf install -y ruby
                     log_success "ruby installed"
+                fi
+
+                if ! command -v node &>/dev/null; then
+                    log_info "Installing Node.js and npm..."
+                    sudo dnf install -y nodejs npm
+                    log_success "Node.js and npm installed"
                 fi
 
                 sudo dnf install -y gcc make
@@ -145,6 +163,12 @@ case "$OS_NAME" in
                     log_success "ruby installed"
                 fi
 
+                if ! command -v node &>/dev/null; then
+                    log_info "Installing Node.js and npm..."
+                    sudo yum install -y nodejs npm
+                    log_success "Node.js and npm installed"
+                fi
+
                 sudo yum install -y gcc make
                 ;;
 
@@ -171,6 +195,12 @@ case "$OS_NAME" in
                     log_info "Installing ruby..."
                     sudo pacman -S --noconfirm ruby
                     log_success "ruby installed"
+                fi
+
+                if ! command -v node &>/dev/null; then
+                    log_info "Installing Node.js and npm..."
+                    sudo pacman -S --noconfirm nodejs npm
+                    log_success "Node.js and npm installed"
                 fi
 
                 sudo pacman -S --noconfirm base-devel
@@ -211,6 +241,12 @@ case "$OS_NAME" in
                     log_info "Installing ruby..."
                     sudo apt install -y ruby-full
                     log_success "ruby installed"
+                fi
+
+                if ! command -v node &>/dev/null; then
+                    log_info "Installing Node.js and npm..."
+                    sudo apt install -y nodejs npm
+                    log_success "Node.js and npm installed"
                 fi
 
                 sudo apt install -y build-essential

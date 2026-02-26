@@ -34,7 +34,7 @@ dusort() {
 
 # Search for process
 psgrep() {
-  ps aux | grep -i "$1" | grep -v grep
+  ps aux | command grep -i "$1" | command grep -v grep
 }
 
 # Kill process by name
@@ -85,17 +85,17 @@ myip() {
 
 # Search command history
 hgrep() {
-  history | grep -i "$1" | tail -20
+  history | command grep -i "$1" | tail -20
 }
 
-# Find files by name
-ffind() {
-  find . -name "*$1*" 2>/dev/null
-}
-
-# Find files by content
+# Find files by content (uses rg if available, falls back to grep)
+# Note: ffind is provided as an alias in sysutils.zsh (fd or fdfind)
 sfind() {
-  grep -r "$1" . 2>/dev/null
+  if command -v rg &>/dev/null; then
+    rg "$1" .
+  else
+    command grep -r "$1" . 2>/dev/null
+  fi
 }
 
 # Quick HTTP server
@@ -132,7 +132,7 @@ genpass() {
 
 # Show disk usage of all mounted drives
 diskusage() {
-  df -h | grep -vE '^Filesystem|tmpfs|cdrom|overlay'
+  df -h | command grep -vE '^Filesystem|tmpfs|cdrom|overlay'
 }
 
 # Watch a process

@@ -189,14 +189,30 @@ install_eza() {
     return 1
 }
 
+install_node() {
+    if command -v node &>/dev/null; then
+        return 0
+    fi
+    log_info "Node.js not found. Installing Node.js and npm..."
+    case "$PACKAGE_MANAGER" in
+        brew)   brew install node && return 0 ;;
+        apt)    sudo apt update && sudo apt install -y nodejs npm && return 0 ;;
+        dnf)    sudo dnf install -y nodejs npm && return 0 ;;
+        yum)    sudo yum install -y nodejs npm && return 0 ;;
+        pacman) sudo pacman -S --noconfirm nodejs npm && return 0 ;;
+    esac
+    log_warn "Could not install Node.js automatically. Install it manually and re-run."
+    return 1
+}
+
 install_tldr() {
     log_info "Installing tldr..."
-    
+
     if command -v tldr &>/dev/null; then
         log_success "tldr is already installed"
         return 0
     fi
-    
+
     case "$PACKAGE_MANAGER" in
         brew)
             brew install tldr && log_success "tldr installed via brew" && return 0
@@ -205,11 +221,14 @@ install_tldr() {
             sudo pacman -S --noconfirm tldr && log_success "tldr installed via pacman" && return 0
             ;;
     esac
-    
-    if command -v npm &>/dev/null; then
-        npm install -g tldr-client && log_success "tldr installed via npm" && return 0
+
+    # For all other package managers: ensure npm is available, then install via npm
+    if ! command -v npm &>/dev/null; then
+        install_node || { log_warn "Could not install tldr. Install manually: npm install -g tldr-client"; return 1; }
     fi
-    
+
+    npm install -g tldr-client && log_success "tldr installed via npm" && return 0
+
     log_warn "Could not install tldr. Install manually: npm install -g tldr-client"
     return 1
 }
