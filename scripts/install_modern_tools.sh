@@ -193,8 +193,15 @@ install_tldr() {
     log_info "Installing tldr..."
 
     if command -v tldr &>/dev/null; then
-        log_success "tldr is already installed"
-        return 0
+        # Validate the existing install actually works
+        if tldr tar 2>/dev/null | command grep -q "tar"; then
+            log_success "tldr is already installed"
+            return 0
+        else
+            log_warn "Existing tldr installation appears broken. Reinstalling..."
+            rm -f "$(command -v tldr)"
+            rm -rf "$HOME/.local/lib/node_modules/tldr" 2>/dev/null || true
+        fi
     fi
 
     case "$PACKAGE_MANAGER" in
@@ -219,34 +226,6 @@ install_tldr() {
     fi
 
     log_warn "Could not install tldr. Install manually: pipx install tldr"
-    return 1
-}
-
-install_tldr() {
-    log_info "Installing tldr..."
-
-    if command -v tldr &>/dev/null; then
-        log_success "tldr is already installed"
-        return 0
-    fi
-
-    case "$PACKAGE_MANAGER" in
-        brew)
-            brew install tldr && log_success "tldr installed via brew" && return 0
-            ;;
-        pacman)
-            sudo pacman -S --noconfirm tldr && log_success "tldr installed via pacman" && return 0
-            ;;
-    esac
-
-    # For all other package managers: ensure npm is available, then install via npm
-    if ! command -v npm &>/dev/null; then
-        install_node || { log_warn "Could not install tldr. Install manually: npm install -g tldr-client"; return 1; }
-    fi
-
-    NPM_CONFIG_PREFIX="$HOME/.local" npm install -g tldr && log_success "tldr installed via npm" && return 0
-
-    log_warn "Could not install tldr. Install manually: NPM_CONFIG_PREFIX=\"\$HOME/.local\" npm install -g tldr"
     return 1
 }
 
