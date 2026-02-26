@@ -31,13 +31,8 @@ if command -v rg &>/dev/null; then
 fi
 
 # eza - modern ls replacement (exa fork)
-if command -v eza &>/dev/null; then
-    alias ls='eza'
-    alias la='eza -la'
-    alias ll='eza -l'
-    alias lt='eza --tree'
-    alias l='eza -lah'
-fi
+# eza is available as 'eza' directly. ls/la/ll/lt aliases are handled by
+# colorls.zsh (if colorls is installed) or fall back to system ls.
 
 # Modern utilities aliases
 alias ping='ping -c 5'

@@ -41,7 +41,8 @@ case "$(uname -s)" in
         if [ "$(id -u)" -ne 0 ]; then
             GEM_INSTALL_FLAGS="--user-install"
             RUBY_API=$(ruby -e 'puts RbConfig::CONFIG["ruby_version"]' 2>/dev/null || echo "3.0.0")
-            export PATH="$HOME/.gem/ruby/$RUBY_API/bin:$PATH"
+            # Add both possible gem bin locations (depends on Ruby version/dist)
+            export PATH="$HOME/.gem/ruby/$RUBY_API/bin:$HOME/.local/share/gem/ruby/$RUBY_API/bin:$PATH"
         fi
         ;;
 esac

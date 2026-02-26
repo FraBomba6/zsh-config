@@ -55,17 +55,19 @@ else
 fi
 
 # Load order matters:
-#   paths   -> ensures binaries are on PATH first
-#   conda   -> conda/mamba init + Docker Desktop fpath (before compinit)
-#   aliases -> command aliases (may depend on PATH)
-#   colorls -> ls/la aliases (needs colorls on PATH)
-#   fzf     -> fuzzy finder config + keybindings
-#   docker  -> docker helpers
+#   paths     -> ensures binaries are on PATH first
+#   conda     -> conda/mamba init + Docker Desktop fpath (before compinit)
+#   aliases   -> command aliases (may depend on PATH)
+#   sysutils  -> modern tool aliases (bat, fd, rg, eza)
+#   colorls   -> ls/la aliases (needs colorls on PATH, takes precedence over eza)
+#   fzf       -> fuzzy finder config + keybindings
+#   docker    -> docker helpers
 #   functions -> utility functions
 for config_file in \
   "$ZSH_CONFIG_CUSTOM_DIR"/paths.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/conda.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/aliases.zsh \
+  "$ZSH_CONFIG_CUSTOM_DIR"/sysutils.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/colorls.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/fzf.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/docker.zsh \

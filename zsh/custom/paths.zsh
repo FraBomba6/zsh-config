@@ -41,6 +41,11 @@ for gemdir in "$HOME"/.gem/ruby/*/bin(N); do
   export PATH="$gemdir:$PATH"
 done
 
+# Modern Ruby user gems (Ruby 3.x on some distros uses ~/.local/share/gem)
+for gemdir in "$HOME"/.local/share/gem/ruby/*/bin(N); do
+  export PATH="$gemdir:$PATH"
+done
+
 # ---------------------------------------------------------------------------
 # 3. FZF (fuzzy finder) -- prefer git-installed version over system package
 # ---------------------------------------------------------------------------
