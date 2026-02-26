@@ -227,9 +227,9 @@ install_tldr() {
         install_node || { log_warn "Could not install tldr. Install manually: npm install -g tldr-client"; return 1; }
     fi
 
-    npm install -g tldr && log_success "tldr installed via npm" && return 0
+    NPM_CONFIG_PREFIX="$HOME/.local" npm install -g tldr && log_success "tldr installed via npm" && return 0
 
-    log_warn "Could not install tldr. Install manually: npm install -g tldr"
+    log_warn "Could not install tldr. Install manually: NPM_CONFIG_PREFIX=\"\$HOME/.local\" npm install -g tldr"
     return 1
 }
 
