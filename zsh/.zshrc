@@ -31,13 +31,6 @@ plugins=(
   zsh-syntax-highlighting
 )
 
-# Tmux plugin configuration (oh-my-zsh plugin handles autostart)
-export ZSH_TMUX_AUTOSTART=true
-export ZSH_TMUX_AUTOSTART_ONCE=true
-export ZSH_TMUX_AUTOCONNECT=true
-export ZSH_TMUX_AUTOQUIT=true
-export ZSH_TMUX_DEFAULT_SESSION_NAME="main"
-
 source $ZSH/oh-my-zsh.sh
 
 # ---------------------------------------------------------------------------
