@@ -332,8 +332,8 @@ if [ "$SKIP_SHELL" = false ]; then
         log_info "Changing default shell to zsh..."
         ZSH_PATH="$(which zsh)"
         SHELL_CHANGED=false
-        if command -v chsh &>/dev/null; then
-            if chsh -s "$ZSH_PATH" 2>/dev/null; then
+        if command -v chsh &>/dev/null && grep -q "^$(whoami):" /etc/passwd 2>/dev/null; then
+            if chsh -s "$ZSH_PATH"; then
                 log_success "Default shell changed to zsh"
                 log_warn "You'll need to logout and login again for the change to take effect."
                 SHELL_CHANGED=true
