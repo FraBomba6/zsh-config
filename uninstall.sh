@@ -106,6 +106,14 @@ log_info "Removing configuration symlinks..."
 [ -L "$HOME/.zshenv" ] && rm "$HOME/.zshenv" && log_success "Removed .zshenv symlink"
 [ -L "$HOME/.tmux.conf" ] && rm "$HOME/.tmux.conf" && log_success "Removed .tmux.conf symlink"
 
+# Remove zsh auto-launch from .bashrc if present
+if [ -f "$HOME/.bashrc" ] && grep -q '# Launch zsh (added by zsh-config installer)' "$HOME/.bashrc"; then
+    sed -i.bak '/# Launch zsh (added by zsh-config installer)/,/^fi$/d' "$HOME/.bashrc"
+    sed -i.bak '/^$/N;/^\n$/d' "$HOME/.bashrc"
+    rm -f "$HOME/.bashrc.bak"
+    log_success "Removed zsh auto-launch from ~/.bashrc"
+fi
+
 # Remove configs if requested
 if [ "$REMOVE_CONFIGS" = true ]; then
     if prompt_yes_no "Remove Oh My Zsh directory?"; then

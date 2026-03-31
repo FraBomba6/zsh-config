@@ -330,13 +330,36 @@ if [ "$SKIP_SHELL" = false ]; then
     CURRENT_SHELL=$(basename "$SHELL")
     if [ "$CURRENT_SHELL" != "zsh" ]; then
         log_info "Changing default shell to zsh..."
+        ZSH_PATH="$(which zsh)"
+        SHELL_CHANGED=false
         if command -v chsh &>/dev/null; then
-            chsh -s "$(which zsh)"
-            log_success "Default shell changed to zsh"
-            log_warn "You'll need to logout and login again for the change to take effect."
-        else
-            log_warn "chsh not available. Please manually change your default shell to zsh:"
-            echo "  chsh -s $(which zsh)"
+            if chsh -s "$ZSH_PATH" 2>/dev/null; then
+                log_success "Default shell changed to zsh"
+                log_warn "You'll need to logout and login again for the change to take effect."
+                SHELL_CHANGED=true
+            fi
+        fi
+        if [ "$SHELL_CHANGED" = false ]; then
+            log_warn "Could not change shell via chsh (common on LDAP/network-managed accounts)."
+            if prompt_yes_no "Add 'exec zsh' to ~/.bashrc so zsh starts automatically?"; then
+                BASHRC="$HOME/.bashrc"
+                if ! grep -q 'exec zsh' "$BASHRC" 2>/dev/null; then
+                    {
+                        echo ""
+                        echo "# Launch zsh (added by zsh-config installer)"
+                        echo "if [ -x \"$ZSH_PATH\" ]; then"
+                        echo "  export SHELL=\"$ZSH_PATH\""
+                        echo "  exec \"$ZSH_PATH\" -l"
+                        echo "fi"
+                    } >> "$BASHRC"
+                    log_success "Added zsh auto-launch to ~/.bashrc"
+                else
+                    log_success "~/.bashrc already launches zsh"
+                fi
+            else
+                log_warn "Please ask your system administrator to change your login shell to:"
+                echo "  $ZSH_PATH"
+            fi
         fi
     else
         log_success "Zsh is already your default shell"
