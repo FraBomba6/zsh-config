@@ -52,7 +52,7 @@ fi
 #   conda     -> conda/mamba init + Docker Desktop fpath (before compinit)
 #   aliases   -> command aliases (may depend on PATH)
 #   sysutils  -> modern tool aliases (bat, fd, rg, eza)
-#   colorls   -> ls/la aliases (needs colorls on PATH, takes precedence over eza)
+#   logo-ls   -> ls/la aliases (needs logo-ls on PATH, takes precedence over eza)
 #   fzf       -> fuzzy finder config + keybindings
 #   docker    -> docker helpers
 #   functions -> utility functions
@@ -61,7 +61,7 @@ for config_file in \
   "$ZSH_CONFIG_CUSTOM_DIR"/conda.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/aliases.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/sysutils.zsh \
-  "$ZSH_CONFIG_CUSTOM_DIR"/colorls.zsh \
+  "$ZSH_CONFIG_CUSTOM_DIR"/logo-ls.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/fzf.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/docker.zsh \
   "$ZSH_CONFIG_CUSTOM_DIR"/functions.zsh; do

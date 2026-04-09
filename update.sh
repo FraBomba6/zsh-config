@@ -82,10 +82,13 @@ if [ -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
     log_success "Powerlevel10k updated"
 fi
 
-if command -v colorls &>/dev/null; then
-    log_info "Updating colorls..."
-    gem update colorls 2>/dev/null || log_warn "Failed to update colorls"
-    log_success "colorls checked"
+if command -v logo-ls &>/dev/null; then
+    log_info "Updating logo-ls..."
+    if curl -fsSL https://raw.githubusercontent.com/canta2899/logo-ls/refs/heads/main/get.sh | sh; then
+        log_success "logo-ls updated"
+    else
+        log_warn "Failed to update logo-ls"
+    fi
 fi
 
 log_info "Pulling latest configuration..."

@@ -12,8 +12,8 @@ ERRORS=0
 WARNINGS=0
 
 pass() { echo -e "${GREEN}[PASS]${NC} $1"; }
-fail() { echo -e "${RED}[FAIL]${NC} $1"; ((ERRORS++)); }
-warn() { echo -e "${YELLOW}[WARN]${NC} $1"; ((WARNINGS++)); }
+fail() { echo -e "${RED}[FAIL]${NC} $1"; ERRORS=$((ERRORS+1)); }
+warn() { echo -e "${YELLOW}[WARN]${NC} $1"; WARNINGS=$((WARNINGS+1)); }
 
 echo "=== zsh-config Validation ==="
 echo ""
@@ -34,7 +34,7 @@ command -v git &>/dev/null && pass "git installed" || fail "git not installed"
 echo ""
 echo "Checking optional commands..."
 command -v fzf &>/dev/null && pass "fzf installed" || warn "fzf not installed"
-command -v colorls &>/dev/null && pass "colorls installed" || warn "colorls not installed"
+command -v logo-ls &>/dev/null && pass "logo-ls installed" || warn "logo-ls not installed"
 
 # Test zshrc loads without errors
 echo ""

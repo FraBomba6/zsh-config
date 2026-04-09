@@ -32,7 +32,7 @@ fi
 
 # eza - modern ls replacement (exa fork)
 # eza is available as 'eza' directly. ls/la/ll/lt aliases are handled by
-# colorls.zsh (if colorls is installed) or fall back to system ls.
+# logo-ls.zsh (if logo-ls is installed) or fall back to system ls.
 
 # Modern utilities aliases
 alias ping='ping -c 5'

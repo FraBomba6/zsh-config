@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Changed
+- **Migrated from colorls (Ruby gem) to [canta2899/logo-ls](https://github.com/canta2899/logo-ls) (Go binary).**
+  Icons are now rendered via Nerd Fonts (required). Installation uses the
+  upstream `get.sh` script and places the binary in `~/.local/bin` — no
+  Ruby/gem dependency. The same command handles updates.
+- `ls`/`la`/`ll`/`lt`/`ld`/`lgs` aliases rewritten to map to logo-ls flags
+  (`-la`, `-al`, `-ld`, `-D`). `lt` now delegates to system `tree -L 2`
+  since logo-ls has no tree mode.
+
+### Added
+- `scripts/install_logo_ls.sh` — installs logo-ls via upstream `get.sh`
+  and auto-removes any legacy colorls gem it finds.
+- `zsh/custom/logo-ls.zsh` — alias integration with system-ls fallback.
+
+### Removed
+- `scripts/install_colorls.sh` and `zsh/custom/colorls.zsh`.
+- `ruby/gem` from core dependencies list in installation docs.
+
+### Notes
+- Users upgrading from a previous install will have their `colorls` gem
+  auto-uninstalled on the next `./install.sh` run.
+- `config.json` key `colorls` renamed to `logo_ls`. `install.sh`
+  regenerates the file, so no manual migration is needed.
+- `docs/superpowers/` is now gitignored (for local-only design specs).
+
 ## [1.2.0] - 2026-02-26
 
 ### Added

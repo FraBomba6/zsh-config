@@ -115,7 +115,7 @@ else
 fi
 
 TMUX_INSTALL=false
-COLORLS_INSTALL=true
+LOGO_LS_INSTALL=true
 
 echo ""
 log_info "=== Configuration Options ==="
@@ -124,22 +124,17 @@ if prompt_yes_no "Install tmux?"; then
     TMUX_INSTALL=true
 fi
 
-if ! command -v colorls &>/dev/null; then
-    if command -v gem &>/dev/null; then
-        log_info "colorls is not installed."
-        if prompt_yes_no "Install colorls (provides colored ls and la aliases)?"; then
-            COLORLS_INSTALL=true
-        else
-            COLORLS_INSTALL=false
-        fi
+if ! command -v logo-ls &>/dev/null; then
+    log_info "logo-ls is not installed."
+    log_warn "logo-ls requires Nerd Fonts in your terminal for icons to render."
+    if prompt_yes_no "Install logo-ls (colored ls with icons and git status)?"; then
+        LOGO_LS_INSTALL=true
     else
-        log_warn "Ruby/gem not found. colorls will not be installed."
-        log_warn "Fallback ls aliases will be used instead."
-        COLORLS_INSTALL=false
+        LOGO_LS_INSTALL=false
     fi
 else
-    log_success "colorls is already installed"
-    COLORLS_INSTALL=true
+    log_success "logo-ls is already installed"
+    LOGO_LS_INSTALL=true
 fi
 
 CONDA_INSTALL=false
@@ -226,8 +221,8 @@ cat << EOF > "$CONFIG_FILE"
     "tmux": {
       "installed": $TMUX_INSTALL
     },
-    "colorls": {
-      "installed": $COLORLS_INSTALL,
+    "logo_ls": {
+      "installed": $LOGO_LS_INSTALL,
       "auto_installed": false
     },
     "conda": {
@@ -263,9 +258,9 @@ source "$ZSH_CONFIG_DIR/scripts/install_ohmyzsh.sh"
 log_info "Installing plugins..."
 source "$ZSH_CONFIG_DIR/scripts/install_plugins.sh"
 
-if [ "$COLORLS_INSTALL" = true ] && ! command -v colorls &>/dev/null; then
-    log_info "Installing colorls..."
-    source "$ZSH_CONFIG_DIR/scripts/install_colorls.sh"
+if [ "$LOGO_LS_INSTALL" = true ] && ! command -v logo-ls &>/dev/null; then
+    log_info "Installing logo-ls..."
+    source "$ZSH_CONFIG_DIR/scripts/install_logo_ls.sh"
 fi
 
 if [ "$INSTALL_BAT" = true ] || [ "$INSTALL_FD" = true ] || [ "$INSTALL_RIPGREP" = true ] || \
@@ -383,8 +378,8 @@ if [ "$TMUX_INSTALL" = true ]; then
     echo "  ✓ Tmux terminal multiplexer (auto-start enabled)"
 fi
 
-if [ "$COLORLS_INSTALL" = true ]; then
-    echo "  ✓ colorls with ls and la aliases"
+if [ "$LOGO_LS_INSTALL" = true ]; then
+    echo "  ✓ logo-ls with ls and la aliases (requires Nerd Fonts)"
 else
     echo "  ✓ ls and la aliases (using system ls)"
 fi

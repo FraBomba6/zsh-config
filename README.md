@@ -12,7 +12,7 @@ A fully portable, cross-platform Zsh configuration with Oh My Zsh, Powerlevel10k
 - 💾 **Backups**: Automatic backups before overwriting
 - 🔄 **Easy updates**: Simple update mechanism
 - 🖥️ **Optional tmux**: Terminal multiplexer with auto-start support
-- 🎨 **colorls**: Enhanced `ls` and `la` aliases with fallback
+- 🎨 **logo-ls**: Enhanced `ls`/`la` aliases with icons and git status (requires Nerd Fonts)
 
 ## Quick Start
 
@@ -49,7 +49,7 @@ Follow the interactive prompts to customize your setup.
 
 ### Optional Components (interactive prompts)
 - **tmux**: Terminal multiplexer
-- **colorls**: Enhanced colored directory listings
+- **logo-ls**: Colored `ls` with file-type icons and git status (requires Nerd Fonts)
 - **Miniforge/Conda**: Python environment manager
 
 ### Configurations
@@ -84,18 +84,12 @@ The installer will:
 
 ```bash
 # Directory navigation
-ls              # Basic listing (colorls or system ls)
-la              # List all files (except . and ..)
-ll              # Long listing, directories first
-lla             # Long listing with hidden files, directories first
-lt              # Tree view (2 levels)
-lf              # Files only
-ldir            # Directories only
-lgs             # With git status
-llgs            # Long listing with git status
-ltr             # Sorted by time, oldest first
-lS              # Sorted by size
-lx              # Sorted by extension
+ls              # Basic listing (logo-ls or system ls)
+la              # Long listing with hidden files
+ll              # Long listing with hidden files
+lt              # Tree view (2 levels, via system `tree`)
+ld              # List directory entry itself, not contents
+lgs             # Long listing with git status
 
 # System monitoring
 btop            # Modern resource monitor (if installed)
@@ -235,16 +229,20 @@ Options include:
 
 ## Troubleshooting
 
-### colorls not working
+### logo-ls not working
 
-If `ls` isn't colorized:
+If `ls` isn't colorized or icons appear as tofu:
 ```bash
-# Check if colorls is installed
-gem list colorls
+# Check if logo-ls is installed and on PATH
+command -v logo-ls
 
-# Reinstall if needed
-gem install colorls
+# Reinstall if needed (same command as update)
+curl -fsSL https://raw.githubusercontent.com/canta2899/logo-ls/refs/heads/main/get.sh | sh
 ```
+
+If icons appear as boxes/tofu, your terminal is not using a Nerd Font.
+Install one from https://www.nerdfonts.com/font-downloads and configure
+your terminal emulator to use it.
 
 ### fzf not working
 
@@ -293,7 +291,7 @@ Your installation settings are stored in `~/zsh-config/config.json`:
     "tmux": {
       "installed": true
     },
-    "colorls": {
+    "logo_ls": {
       "installed": true
     },
     "plugins": {
@@ -326,7 +324,7 @@ MIT License - see LICENSE file for details
 - [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
 - [fzf](https://github.com/junegunn/fzf)
 - [z](https://github.com/agkozak/zsh-z)
-- [colorls](https://github.com/athityat Kumar/colorls)
+- [logo-ls](https://github.com/canta2899/logo-ls) (maintained fork of [Yash-Handa/logo-ls](https://github.com/Yash-Handa/logo-ls))
 
 ## Support
 

@@ -142,6 +142,20 @@ fi
 
 # Remove packages if requested
 if [ "$REMOVE_PACKAGES" = true ]; then
+    if prompt_yes_no "Remove logo-ls?"; then
+        if [ -f "$HOME/.local/bin/logo-ls" ]; then
+            rm -f "$HOME/.local/bin/logo-ls"
+            log_success "Removed logo-ls binary"
+        fi
+
+        # Migration cleanup: remove legacy colorls gem if still present
+        if command -v colorls &>/dev/null && command -v gem &>/dev/null; then
+            log_info "Removing legacy colorls gem..."
+            gem uninstall -x -a colorls 2>/dev/null \
+                || log_error "Could not uninstall colorls gem (try manually: gem uninstall -x -a colorls)"
+        fi
+    fi
+
     if prompt_yes_no "Remove installed packages?"; then
         source scripts/detect_os.sh
         case "$PACKAGE_MANAGER" in

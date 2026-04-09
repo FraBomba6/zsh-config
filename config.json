@@ -8,7 +8,7 @@
       "installed": false,
       "auto_on_ssh": false
     },
-    "colorls": {
+    "logo_ls": {
       "installed": true,
       "auto_installed": false
     },

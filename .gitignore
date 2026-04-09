@@ -45,3 +45,6 @@ __pycache__/
 # Local overrides (not tracked in git)
 zsh/custom/local.zsh
 ~/.zshrc.local
+
+# Brainstorming / planning specs (not tracked in git)
+docs/superpowers/

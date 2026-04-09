@@ -14,7 +14,7 @@ This guide helps you customize your Zsh configuration to fit your needs.
     ├── paths.zsh            # PATH additions
     ├── functions.zsh        # Custom functions
     ├── fzf.zsh            # FZF configuration
-    ├── colorls.zsh         # colorls integration
+    ├── logo-ls.zsh         # logo-ls integration
     └── docker.zsh          # Docker aliases
 ```
 
@@ -42,7 +42,7 @@ Comment out or delete lines in `zsh/custom/aliases.zsh`:
 
 ```zsh
 # Don't like this alias? Comment it out
-# alias ls='colorls'
+# alias ls='logo-ls'
 ```
 
 ### Git Aliases

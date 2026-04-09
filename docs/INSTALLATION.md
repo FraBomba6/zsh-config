@@ -60,11 +60,14 @@ The installer prompts you to configure optional features:
 - Configures sensible defaults
 - Auto-starts via oh-my-zsh plugin (configurable)
 
-#### Install colorls?
-- Checks for Ruby/gem
-- Installs `colorls` gem
-- Creates enhanced `ls` and `la` aliases
-- Falls back to system `ls` if unavailable
+#### Install logo-ls?
+- Downloads the latest `logo-ls` binary via the upstream `get.sh` script
+  (from [canta2899/logo-ls](https://github.com/canta2899/logo-ls))
+- Installs to `~/.local/bin/logo-ls` (no sudo required)
+- Auto-removes any legacy `colorls` gem it finds
+- Creates `ls`, `la`, `ll`, `lt`, `ld`, `lgs` aliases
+- Requires Nerd Fonts in your terminal for icons to render
+- Falls back to system `ls` if not installed
 
 #### Install Miniforge/Conda?
 - Downloads Miniforge installer
@@ -77,7 +80,6 @@ Core dependencies installed automatically:
 - **zsh**: Z shell
 - **git**: Version control
 - **curl**: HTTP client
-- **ruby/gem**: For colorls
 - **build tools**: For fzf compilation (on Linux)
 
 ### 5. Oh My Zsh Setup
@@ -202,11 +204,14 @@ git clone --depth=1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --key-bindings --completion
 ```
 
-### Install colorls
+### Install logo-ls
 
 ```bash
-gem install colorls
+curl -fsSL https://raw.githubusercontent.com/canta2899/logo-ls/refs/heads/main/get.sh | sh
 ```
+
+Installs to `~/.local/bin/logo-ls`. Requires Nerd Fonts in your terminal
+for icons to render. The same command also updates an existing install.
 
 ### Install tmux
 

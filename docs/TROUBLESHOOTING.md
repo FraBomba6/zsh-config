@@ -364,73 +364,60 @@ This guide helps you resolve common issues with the Zsh configuration.
 
 ## Integration Issues
 
-### colorls Not Working
+### logo-ls Not Working
 
 **Symptoms:**
-- `ls` shows system output, not colored
-- `la` alias doesn't exist
+- `ls` shows system output, not iconified
+- `la`/`ll` show plain long listings with no icons
 
 **Solutions:**
 
-1. Check colorls is installed:
+1. Check logo-ls is installed and on PATH:
    ```bash
-   gem which colorls
+   command -v logo-ls
+   ls -l ~/.local/bin/logo-ls
    ```
 
-2. Reinstall colorls:
+2. Reinstall (same command handles updates):
    ```bash
-   gem uninstall colorls
-   gem install colorls
+   curl -fsSL https://raw.githubusercontent.com/canta2899/logo-ls/refs/heads/main/get.sh | sh
    ```
 
-3. Check Ruby in PATH:
+3. Ensure `~/.local/bin` is on PATH:
    ```bash
-   gem env | grep EXECUTABLE
+   echo $PATH | tr ':' '\n' | grep -F "$HOME/.local/bin"
    ```
+   This should already be handled by `zsh/custom/paths.zsh`. Reload your
+   shell with `source ~/.zshrc` if needed.
 
-4. Manually add to PATH in `~/zsh-config/zsh/custom/paths.zsh`:
-   ```zsh
-   export PATH="$(gem env | grep 'EXECUTABLE DIRECTORY' | cut -d ':' -f 2 | tr -d ' '):$PATH"
-   ```
+4. Use fallback:
+   The config automatically falls back to `ls --color=auto` (or `ls -G`
+   on macOS) when logo-ls is not on PATH.
 
-5. Use fallback:
-   The config automatically falls back to `ls --color=auto`
-
-### colorls Not in PATH
+### logo-ls Icons Render as Tofu (Boxes)
 
 **Symptoms:**
-- `colorls: command not found`
-- `gem which colorls` shows it's installed
-- `ls` uses system output instead of colorls
+- `logo-ls` runs but icons display as empty boxes or replacement characters
 
-**Solutions:**
+**Cause:**
+- Your terminal is not using a Nerd Font.
 
-1. Check where colorls is installed:
-   ```bash
-   gem which colorls
-   gem env | grep -E "(USER INSTALLATION|EXECUTABLE DIRECTORY)"
-   ```
+**Solution:**
 
-2. If installed to user gems, verify PATH includes user gem bin:
-   ```bash
-   echo $PATH | grep ruby
-   # Should show ~/.gem/ruby/X.Y.0/bin
-   ```
+1. Download a Nerd Font from https://www.nerdfonts.com/font-downloads
+2. Install it on your system
+3. Configure your terminal emulator to use the Nerd Font
+   (the exact steps depend on your terminal: iTerm2, Alacritty, Kitty,
+   Windows Terminal, etc.)
 
-3. Manually verify paths.zsh configuration:
-   ```bash
-   cat ~/zsh-config/zsh/custom/paths.zsh | grep -A 10 "Ruby gems"
-   # Should check USER INSTALLATION DIRECTORY first
-   ```
+### Migrating from colorls
 
-4. Reload shell after fixes:
-   ```bash
-   source ~/.zshrc
-   which colorls  # Should now find it
-   ```
+If you previously used the `colorls` gem, the installer auto-removes it
+when you install logo-ls. If for some reason it wasn't removed:
 
-5. Fallback to system ls if issues persist:
-   The config automatically falls back to `ls --color=auto`
+```bash
+gem uninstall -x -a colorls
+```
 
 ### tmux Auto-Start Issues
 
