@@ -283,7 +283,10 @@ ln -sf "$ZSH_CONFIG_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
 # Link tmux configuration
 if [ "$TMUX_INSTALL" = true ]; then
   ln -sf "$ZSH_CONFIG_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
-  log_info "Tmux autostart enabled via oh-my-zsh plugin"
+  log_info "Tmux enabled: plugin loaded and SSH auto-start active"
+else
+  # If tmux was previously installed via this repo, clean up the stale symlink
+  [ -L "$HOME/.tmux.conf" ] && rm -f "$HOME/.tmux.conf"
 fi
 
 if [ ! -f "$HOME/.zshenv" ] || [ "$SKIP_BACKUP" = true ]; then

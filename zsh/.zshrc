@@ -16,11 +16,40 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 
+# ---------------------------------------------------------------------------
+# Resolve the repo directory from the ~/.zshrc symlink so we can read
+# config.json and source custom files.  Falls back to ~/zsh-config if the
+# symlink is missing (e.g. the file was copied instead of linked).
+# ---------------------------------------------------------------------------
+if [ -L "$HOME/.zshrc" ]; then
+  _zshrc_real="$(readlink "$HOME/.zshrc")"
+  ZSH_CONFIG_REPO_DIR="$(cd "$(dirname "$_zshrc_real")/.." && pwd)"
+  unset _zshrc_real
+else
+  ZSH_CONFIG_REPO_DIR="${HOME}/zsh-config"
+fi
+ZSH_CONFIG_CUSTOM_DIR="$ZSH_CONFIG_REPO_DIR/zsh/custom"
+
+# ---------------------------------------------------------------------------
+# Install-time feature flags — read from config.json (written by install.sh).
+# Fail safe: if config.json is missing or unreadable, features default to off.
+# ---------------------------------------------------------------------------
+ZSH_CONFIG_TMUX_ENABLED=false
+if [[ -f "$ZSH_CONFIG_REPO_DIR/config.json" ]]; then
+  if command awk '
+    /"tmux"[[:space:]]*:/ { in_tmux=1; next }
+    in_tmux && /"installed"[[:space:]]*:[[:space:]]*true/ { found=1; exit }
+    in_tmux && /\}/ { in_tmux=0 }
+    END { exit !found }
+  ' "$ZSH_CONFIG_REPO_DIR/config.json" 2>/dev/null; then
+    ZSH_CONFIG_TMUX_ENABLED=true
+  fi
+fi
+
 # Plugins (built-in + custom that live in $ZSH_CUSTOM/plugins/)
 plugins=(
   git
   wd
-  tmux
   ssh
   docker
   gh
@@ -30,22 +59,11 @@ plugins=(
   zsh-autosuggestions
   zsh-syntax-highlighting
 )
+# Append tmux plugin only when the user opted in during install.
+# Avoids loading the oh-my-zsh tmux wrapper when tmux was declined.
+[[ "$ZSH_CONFIG_TMUX_ENABLED" == "true" ]] && plugins+=(tmux)
 
 source $ZSH/oh-my-zsh.sh
-
-# ---------------------------------------------------------------------------
-# Source custom configuration files from the repo
-# ---------------------------------------------------------------------------
-# Resolve the repo directory: follow the symlink from ~/.zshrc back to its
-# parent, then up to zsh/custom/.  Falls back to ~/zsh-config if the symlink
-# is missing (e.g. the file was copied instead of linked).
-if [ -L "$HOME/.zshrc" ]; then
-  _zshrc_real="$(readlink "$HOME/.zshrc")"
-  ZSH_CONFIG_CUSTOM_DIR="$(cd "$(dirname "$_zshrc_real")" && pwd)/custom"
-  unset _zshrc_real
-else
-  ZSH_CONFIG_CUSTOM_DIR="${HOME}/zsh-config/zsh/custom"
-fi
 
 # Load order matters:
 #   paths     -> ensures binaries are on PATH first
@@ -115,9 +133,13 @@ setopt APPEND_HISTORY
 [[ -f "$ZSH_CONFIG_CUSTOM_DIR/local.zsh" ]] && source "$ZSH_CONFIG_CUSTOM_DIR/local.zsh"
 
 # ---------------------------------------------------------------------------
-# Auto-start tmux on SSH connections (if tmux is installed)
+# Auto-start tmux on SSH connections — only when the user opted into tmux
+# during install (ZSH_CONFIG_TMUX_ENABLED, derived from config.json).
 # ---------------------------------------------------------------------------
-if [[ -n "$SSH_TTY" ]] && [[ -z "$TMUX" ]] && command -v tmux &>/dev/null; then
+if [[ "$ZSH_CONFIG_TMUX_ENABLED" == "true" ]] \
+   && [[ -n "$SSH_TTY" ]] \
+   && [[ -z "$TMUX" ]] \
+   && command -v tmux &>/dev/null; then
   if tmux has-session -t main 2>/dev/null; then
     exec tmux attach-session -t main
   else
